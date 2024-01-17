@@ -11,11 +11,11 @@ import lombok.Data;
 public class IniciacaoCientifica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String name;
-    private String remuneracao;
-    private int cargaHorariaSemanal;
-    private String situacaoCriacao;
-    private int coordenadorId;
+    private int Id;
+    private String Nome;
+    private Double Remuneracao;
+    private int Carga_Horaria_Semanal;
+    private int Situacao_Criacao_Id;
+    private int Coordenador_Id;
 
 }

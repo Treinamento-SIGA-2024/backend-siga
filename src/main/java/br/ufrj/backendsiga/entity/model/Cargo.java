@@ -7,18 +7,16 @@ import java.util.Set;
 
 @Data
 @Entity
-public class Usuario {
+public class Cargo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
-    private String email;
-    private String senha;
 
     @ManyToMany
     @JoinTable(
             name = "Usuario_Cargo",
-            joinColumns = @JoinColumn(name = "Usuario_Id"),
-            inverseJoinColumns = @JoinColumn(name = "Cargo_Id"))
-    private Set<Cargo> cargos;
+            joinColumns = @JoinColumn(name = "Cargo_Id"),
+            inverseJoinColumns = @JoinColumn(name = "Usuario_Id"))
+    private Set<Usuario> usuarios;
 }
