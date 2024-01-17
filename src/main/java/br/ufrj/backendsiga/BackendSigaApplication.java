@@ -8,6 +8,7 @@ public class BackendSigaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendSigaApplication.class, args);
+
 	}
 
 }
