@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-@Entity
+@Entity(name = "estagio")
 public class Estagio {
 
     @Id
@@ -19,10 +19,10 @@ public class Estagio {
     @Column(length = 500)
     private String descricao;
 
-    @Column(name = "Quantidade_Vagas", nullable = false)
+    @Column(name = "quantidade_vagas", nullable = false)
     private Integer quantidadeVagas;
 
-    @Column(name = "Carga_Horaria_Semanal")
+    @Column(name = "carga_horaria_semanal")
     private Integer cargaHorariaSemanal;
 
     private Double remuneracao;
