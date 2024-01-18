@@ -1,19 +1,28 @@
 package br.ufrj.backendsiga.entity.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity(name = "Inscricao_IC")
+@Entity(name = "inscricao_ic")
 public class InscricaoIC {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private int Situacao_Inscricao_Id;
-    private int Aluno_Id;
-    private int IC_Id;
-    private int Professor_Id;
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "aluno_id", nullable = false)
+    private Usuario aluno;
+
+    @ManyToOne
+    @JoinColumn(name = "ic_id", nullable = false)
+    private IniciacaoCientifica iniciacaoCientifica;
+
+    @ManyToOne
+    @JoinColumn(name = "professor_avaliador_id")
+    private Usuario professor;
+
+    @ManyToOne
+    @JoinColumn(name = "situacao_id", nullable = false)
+    private SituacaoInscricao situacaoInscricao;
 }

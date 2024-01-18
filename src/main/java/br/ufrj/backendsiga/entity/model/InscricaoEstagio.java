@@ -4,14 +4,25 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity(name = "Inscricao_Estagio")
+@Entity(name = "inscricao_estagio")
 public class InscricaoEstagio {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private int Situacao_Inscricao_Id;
-    private int Coordenador_Id;
-    private int Estagio_Id;
-    private int Aluno_Id;
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "estagio_id", nullable = false)
+    private Estagio estagio;
+
+    @ManyToOne
+    @JoinColumn(name = "aluno_id", nullable = false)
+    private Usuario aluno;
+
+    @ManyToOne
+    @JoinColumn(name = "coordenador_avaliador_id")
+    private Usuario coordenadorAvaliador;
+
+    @ManyToOne
+    @JoinColumn(name = "situacao_id", nullable = false)
+    private SituacaoInscricao situacaoInscricao;
 }
