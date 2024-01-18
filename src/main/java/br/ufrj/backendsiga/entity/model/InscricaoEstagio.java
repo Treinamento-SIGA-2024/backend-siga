@@ -9,9 +9,21 @@ public class InscricaoEstagio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private int Situacao_Inscricao_Id;
-    private int Coordenador_Id;
-    private int Estagio_Id;
-    private int Aluno_Id;
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "Estagio_Id", nullable = false)
+    private Estagio estagio;
+
+    @ManyToOne
+    @JoinColumn(name = "Aluno_Id", nullable = false)
+    private Usuario aluno;
+
+    @ManyToOne
+    @JoinColumn(name = "Coordenador_Id")
+    private Usuario coordenador;
+
+    @ManyToOne
+    @JoinColumn(name = "Situacao_Inscricao_Id", nullable = false)
+    private SituacaoInscricao situacaoInscricao;
 }
