@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity(name = "Inscricao_Estagio")
+@Entity(name = "inscricao_estagio")
 public class InscricaoEstagio {
 
     @Id
@@ -12,18 +12,18 @@ public class InscricaoEstagio {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "Estagio_Id", nullable = false)
+    @JoinColumn(name = "estagio_id", nullable = false)
     private Estagio estagio;
 
     @ManyToOne
-    @JoinColumn(name = "Aluno_Id", nullable = false)
+    @JoinColumn(name = "aluno_id", nullable = false)
     private Usuario aluno;
 
     @ManyToOne
-    @JoinColumn(name = "Coordenador_Id")
+    @JoinColumn(name = "coordenador_avaliador_id")
     private Usuario coordenador;
 
     @ManyToOne
-    @JoinColumn(name = "Situacao_Inscricao_Id", nullable = false)
+    @JoinColumn(name = "situacao_id", nullable = false)
     private SituacaoInscricao situacaoInscricao;
 }

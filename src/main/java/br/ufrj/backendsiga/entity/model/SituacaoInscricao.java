@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-@Entity(name = "Situacao_Inscricao")
+@Entity(name = "situacao_inscricao")
 public class SituacaoInscricao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,6 @@ public class SituacaoInscricao {
     private String descricao;
 
     @OneToMany(mappedBy = "situacaoInscricao")
-    private Set<InscricaoIC> inscricoes;
+    private Set<InscricaoIC> inscricoesICs;
 
 }

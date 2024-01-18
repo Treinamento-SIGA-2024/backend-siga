@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-@Entity
+@Entity(name = "usuario")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,9 @@ public class Usuario {
 
     @ManyToMany
     @JoinTable(
-            name = "Usuario_Cargo",
-            joinColumns = @JoinColumn(name = "Usuario_Id"),
-            inverseJoinColumns = @JoinColumn(name = "Cargo_Id")
+            name = "r_usuario_cargo",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "cargo_id")
     )
     private Set<Cargo> cargos;
 }
