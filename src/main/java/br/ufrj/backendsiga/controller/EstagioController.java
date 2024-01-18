@@ -1,0 +1,23 @@
+package br.ufrj.backendsiga.controller;
+
+import br.ufrj.backendsiga.entity.model.Estagio;
+import br.ufrj.backendsiga.service.EstagioService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/estagio")
+public class EstagioController {
+    private final EstagioService estagioService;
+
+    public EstagioController(EstagioService estagioService) {
+        this.estagioService = estagioService;
+    }
+    @GetMapping()
+    public List<Estagio> listAll(){
+        return estagioService.listAll();
+    }
+}

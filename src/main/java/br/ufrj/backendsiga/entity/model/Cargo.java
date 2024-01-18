@@ -15,6 +15,11 @@ public class Cargo {
     @Column(name = "nome", unique = true, nullable = false, length = 40)
     private String nome;
 
-    @ManyToMany(mappedBy = "cargos")
+    @ManyToMany
+    @JoinTable(
+            name = "r_usuario_cargo",
+            joinColumns = @JoinColumn(name = "cargo_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
     private Set<Usuario> usuarios;
 }
