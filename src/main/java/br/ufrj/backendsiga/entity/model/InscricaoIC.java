@@ -1,9 +1,6 @@
 package br.ufrj.backendsiga.entity.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -11,9 +8,21 @@ import lombok.Data;
 public class InscricaoIC {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private int Situacao_Inscricao_Id;
-    private int Aluno_Id;
-    private int IC_Id;
-    private int Professor_Id;
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "Aluno_Id", nullable = false)
+    private Usuario aluno;
+
+    @ManyToOne
+    @JoinColumn(name = "IC_Id", nullable = false)
+    private IniciacaoCientifica iniciacaoCientifica;
+
+    @ManyToOne
+    @JoinColumn(name = "Professor_Id")
+    private Usuario professor;
+
+    @ManyToOne
+    @JoinColumn(name = "Situacao_Inscricao_Id", nullable = false)
+    private SituacaoInscricao situacaoInscricao;
 }

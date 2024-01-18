@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-@Entity(name = "Situacao_Criacao_IC")
-public class SituacaoCriacaoIC {
+@Entity(name = "Situacao_Inscricao")
+public class SituacaoInscricao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,11 +17,7 @@ public class SituacaoCriacaoIC {
 
     private String descricao;
 
-    @OneToMany(mappedBy = "situacaoCriacao")
-    private Set<IniciacaoCientifica> iniciacoesCientificas;
-
+    @OneToMany(mappedBy = "situacaoInscricao")
+    private Set<InscricaoIC> inscricoes;
 
 }
-
-
-

@@ -10,13 +10,11 @@ import java.util.Set;
 public class Cargo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+
+    @Column(unique = true, nullable = false, length = 40)
     private String nome;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Usuario_Cargo",
-            joinColumns = @JoinColumn(name = "Cargo_Id"),
-            inverseJoinColumns = @JoinColumn(name = "Usuario_Id"))
+    @ManyToMany(mappedBy = "cargos")
     private Set<Usuario> usuarios;
 }
