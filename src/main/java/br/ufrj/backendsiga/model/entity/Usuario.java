@@ -1,14 +1,17 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "usuario")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //TIRAR DEPOIS HEIN
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +29,7 @@ public class Usuario {
     @Column(nullable = false, length = 40)
     private String senha;
 
+    @JsonIgnoreProperties("usuarios")
     @ManyToMany
     @JoinTable(
             name = "r_usuario_cargo",
