@@ -3,7 +3,7 @@ package br.ufrj.backendsiga.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity(name = "estagio")
@@ -34,7 +34,7 @@ public class Estagio {
     private String empresa;
 
     @OneToMany(mappedBy = "estagio")
-    private Set<InscricaoEstagio> inscricoesEstagio;
+    private List<InscricaoEstagio> inscricoesEstagio;
 
 }
 

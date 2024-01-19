@@ -3,7 +3,7 @@ package br.ufrj.backendsiga.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity(name = "cargo")
@@ -26,5 +26,5 @@ public class Cargo {
             joinColumns = @JoinColumn(name = "cargo_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
-    private Set<Usuario> usuarios;
+    private List<Usuario> usuarios;
 }
