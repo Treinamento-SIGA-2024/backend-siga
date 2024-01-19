@@ -1,6 +1,6 @@
 package br.ufrj.backendsiga.repository;
 
-import br.ufrj.backendsiga.entity.model.SituacaoInscricao;
+import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
