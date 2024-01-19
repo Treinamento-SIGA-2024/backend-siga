@@ -1,4 +1,4 @@
-package br.ufrj.backendsiga.entity.model;
+package br.ufrj.backendsiga.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
