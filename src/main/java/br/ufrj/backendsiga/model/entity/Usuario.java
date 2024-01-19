@@ -1,10 +1,9 @@
 package br.ufrj.backendsiga.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -28,33 +27,32 @@ public class Usuario {
     private String senha;
 
     @ManyToMany
-    @JsonIgnoreProperties("usuarios")
     @JoinTable(
             name = "r_usuario_cargo",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "cargo_id")
     )
-    private List<Cargo> cargos;
+    private Set<Cargo> cargos;
 
     //Informações de aluno
     @OneToMany(mappedBy = "aluno")
-    private List<InscricaoIC> inscricoesIC;
+    private Set<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "aluno")
-    private List<InscricaoEstagio> inscricoesEstagio;
+    private Set<InscricaoEstagio> inscricoesEstagio;
 
     //Informações de coordenador
     @OneToMany(mappedBy = "coordenadorAvaliador")
-    List<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
+    Set<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
 
     @OneToMany(mappedBy = "coordenadorAvaliador")
-    List<InscricaoEstagio> inscricoesEstagioAvaliadas;
+    Set<InscricaoEstagio> inscricoesEstagioAvaliadas;
 
     //Informações de professor
     @ManyToMany(mappedBy = "professores")
-    private List<IniciacaoCientifica> iniciacoesCientificas;
+    private Set<IniciacaoCientifica> iniciacoesCientificas;
 
     @OneToMany(mappedBy = "professor")
-    private List<InscricaoIC> inscricoesICAvaliadas;
+    private Set<InscricaoIC> inscricoesICAvaliadas;
 
 }

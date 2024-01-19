@@ -3,7 +3,7 @@ package br.ufrj.backendsiga.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity(name = "iniciacao_cientifica")
@@ -24,7 +24,7 @@ public class IniciacaoCientifica {
     private Integer cargaHorariaSemanal;
 
     @OneToMany(mappedBy = "iniciacaoCientifica")
-    private List<InscricaoIC> inscricoes;
+    private Set<InscricaoIC> inscricoes;
 
     @ManyToMany
     @JoinTable(
@@ -32,7 +32,7 @@ public class IniciacaoCientifica {
             joinColumns = @JoinColumn(name = "ic_id"),
             inverseJoinColumns = @JoinColumn(name = "topico_id")
     )
-    private List<Topico> topicos;
+    private Set<Topico> topicos;
 
     @ManyToMany
     @JoinTable(
@@ -40,7 +40,7 @@ public class IniciacaoCientifica {
             joinColumns = @JoinColumn(name = "ic_id"),
             inverseJoinColumns = @JoinColumn(name = "professor_id")
     )
-    private List<Usuario> professores;
+    private Set<Usuario> professores;
 
     @ManyToOne
     @JoinColumn(name = "situacao_criacao_id", nullable = false)

@@ -3,7 +3,7 @@ package br.ufrj.backendsiga.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity(name = "situacao_inscricao")
@@ -18,8 +18,8 @@ public class SituacaoInscricao {
     private String descricao;
 
     @OneToMany(mappedBy = "situacaoInscricao")
-    private List<InscricaoIC> inscricoesIC;
+    private Set<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "situacaoInscricao")
-    private List<InscricaoEstagio> inscricoesEstagio;
+    private Set<InscricaoEstagio> inscricoesEstagio;
 }
