@@ -8,6 +8,11 @@ import java.util.Set;
 @Data
 @Entity(name = "cargo")
 public class Cargo {
+    public final static String ALUNO = "Aluno";
+    public final static String PROFESSOR = "Professor";
+    public final static String COORDENADOR = "Coordenador";
+    public final static String SECRETARIO = "Secretario";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
