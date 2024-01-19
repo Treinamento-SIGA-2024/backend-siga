@@ -1,15 +1,13 @@
 package br.ufrj.backendsiga.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -29,34 +27,35 @@ public class Usuario {
     @Column(nullable = false, length = 40)
     private String senha;
 
+    @ManyToMany(mappedBy = "usuarios")
     @JsonIgnoreProperties("usuarios")
-    @ManyToMany
-    @JoinTable(
-            name = "r_usuario_cargo",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "cargo_id")
-    )
-    private Set<Cargo> cargos;
+    private List<Cargo> cargos;
 
     //Informações de aluno
     @OneToMany(mappedBy = "aluno")
-    private Set<InscricaoIC> inscricoesIC;
+    @JsonManagedReference
+    private List<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "aluno")
-    private Set<InscricaoEstagio> inscricoesEstagio;
+    @JsonManagedReference
+    private List<InscricaoEstagio> inscricoesEstagio;
 
     //Informações de coordenador
     @OneToMany(mappedBy = "coordenadorAvaliador")
-    Set<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
+    @JsonManagedReference
+    List<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
 
     @OneToMany(mappedBy = "coordenadorAvaliador")
-    Set<InscricaoEstagio> inscricoesEstagioAvaliadas;
+    @JsonManagedReference
+    List<InscricaoEstagio> inscricoesEstagioAvaliadas;
 
     //Informações de professor
     @ManyToMany(mappedBy = "professores")
-    private Set<IniciacaoCientifica> iniciacoesCientificas;
+    @JsonIgnoreProperties("professores")
+    private List<IniciacaoCientifica> iniciacoesCientificas;
 
-    @OneToMany(mappedBy = "professor")
-    private Set<InscricaoIC> inscricoesICAvaliadas;
+    @OneToMany(mappedBy = "professorAvaliador")
+    @JsonManagedReference
+    private List<InscricaoIC> inscricoesICAvaliadas;
 
 }

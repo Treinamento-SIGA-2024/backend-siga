@@ -1,9 +1,10 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity(name = "situacao_criacao_ic")
@@ -18,7 +19,8 @@ public class SituacaoCriacaoIC {
     private String descricao;
 
     @OneToMany(mappedBy = "situacaoCriacao")
-    private Set<IniciacaoCientifica> iniciacoesCientificas;
+    @JsonManagedReference
+    private List<IniciacaoCientifica> iniciacoesCientificas;
 
 
 }

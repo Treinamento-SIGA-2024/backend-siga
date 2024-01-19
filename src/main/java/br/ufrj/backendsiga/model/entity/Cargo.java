@@ -1,18 +1,12 @@
 package br.ufrj.backendsiga.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity
 @Table(name = "cargo")
 public class Cargo {
@@ -28,12 +22,12 @@ public class Cargo {
     @Column(name = "nome", unique = true, nullable = false, length = 40)
     private String nome;
 
-    @JsonIgnoreProperties("cargos")
     @ManyToMany
+    @JsonIgnoreProperties("cargos")
     @JoinTable(
             name = "r_usuario_cargo",
             joinColumns = @JoinColumn(name = "cargo_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
-    private Set<Usuario> usuarios;
+    private List<Usuario> usuarios;
 }
