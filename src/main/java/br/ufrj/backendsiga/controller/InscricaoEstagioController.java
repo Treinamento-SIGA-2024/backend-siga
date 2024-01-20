@@ -25,4 +25,12 @@ public class InscricaoEstagioController {
     public InscricaoEstagio findById(@PathVariable Integer id) {
         return inscricaoEstagioService.findById(id);
     }
+    @PutMapping(path = "/estagio/aprovar/{id}")
+    public InscricaoEstagio approvePedido(@PathVariable Integer id) {
+        return inscricaoEstagioService.approvePedido(id);
+    }
+    @PutMapping(path = "/estagio/rejeitar/{id}")
+    public InscricaoEstagio rejectPedido(@PathVariable Integer id) {
+        return inscricaoEstagioService.rejectPedido(id);
+    }
 }

@@ -27,4 +27,27 @@ public class InscricaoEstagioService {
          SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
          return inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
     }
+
+    public InscricaoEstagio approvePedido(Integer id) {
+        InscricaoEstagio inscricaoEstagio = findById(id);
+        if(inscricaoEstagio.getSituacaoInscricao().getCodigo().equals("001")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Inscrição de estágio já aprovada");
+        } else if(inscricaoEstagio.getSituacaoInscricao().getCodigo().equals("002")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Inscrição de estágio já rejeitada");
+        }
+        SituacaoInscricao aprovado = situacaoInscricaoService.findByCodigo("001");
+        inscricaoEstagio.setSituacaoInscricao(aprovado);
+        return inscricaoEstagioRepository.save(inscricaoEstagio);
+    }
+    public InscricaoEstagio rejectPedido(Integer id) {
+        InscricaoEstagio inscricaoEstagio = findById(id);
+        if(inscricaoEstagio.getSituacaoInscricao().getCodigo().equals("001")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Inscrição de estágio já aprovada");
+        } else if(inscricaoEstagio.getSituacaoInscricao().getCodigo().equals("002")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Inscrição de estágio já rejeitada");
+        }
+        SituacaoInscricao rejeitado = situacaoInscricaoService.findByCodigo("002");
+        inscricaoEstagio.setSituacaoInscricao(rejeitado);
+        return inscricaoEstagioRepository.save(inscricaoEstagio);
+    }
 }
