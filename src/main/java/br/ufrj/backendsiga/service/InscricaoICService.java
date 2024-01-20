@@ -93,6 +93,19 @@ public class InscricaoICService {
         return inscricaoICRepository.save(inscricaoIC);
     }
 
+    public List<InscricaoIC> verInscricoesIC(Integer aluno_id){
+
+        Optional<Usuario> aluno = usuarioRepository.findById(aluno_id);
+
+        List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
+        if(!cargosAlunoId.contains("Aluno")){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "O usuário não é um aluno");
+        }
+
+        List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+        return inscricoes;
+    }
+
 
 
 }

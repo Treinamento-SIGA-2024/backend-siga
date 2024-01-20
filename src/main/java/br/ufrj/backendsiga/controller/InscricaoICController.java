@@ -27,4 +27,11 @@ public class InscricaoICController {
          InscricaoIC inscricao = inscricaoICService.criarInscricaoIC(ic_id, aluno_id, professor_id, codigo);
         return inscricao;
     }
+
+
+    @GetMapping("/IC/aluno/{aluno_id}")
+    public List<InscricaoIC> verInscricoesIC(@PathVariable Integer aluno_id){
+        List<InscricaoIC> inscricoes = inscricaoICService.verInscricoesIC(aluno_id);
+        return inscricoes;
+    }
 }
