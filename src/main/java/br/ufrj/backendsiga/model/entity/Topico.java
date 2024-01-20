@@ -1,4 +1,4 @@
-package br.ufrj.backendsiga.entity.model;
+package br.ufrj.backendsiga.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-@Entity
+@Entity(name = "topico")
 public class Topico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
