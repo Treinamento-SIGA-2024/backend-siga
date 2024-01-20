@@ -1,8 +1,10 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -32,11 +34,12 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "cargo_id")
     )
-    private Set<Cargo> cargos;
+    private List<Cargo> cargos;
 
     //Informações de aluno
     @OneToMany(mappedBy = "aluno")
-    private Set<InscricaoIC> inscricoesIC;
+    @JsonManagedReference
+    private List<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "aluno")
     private Set<InscricaoEstagio> inscricoesEstagio;
@@ -54,5 +57,4 @@ public class Usuario {
 
     @OneToMany(mappedBy = "professor")
     private Set<InscricaoIC> inscricoesICAvaliadas;
-
 }

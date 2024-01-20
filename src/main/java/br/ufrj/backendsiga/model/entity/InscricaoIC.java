@@ -1,5 +1,6 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ public class InscricaoIC {
 
     @ManyToOne
     @JoinColumn(name = "aluno_id", nullable = false)
+    @JsonBackReference
     private Usuario aluno;
 
     @ManyToOne
