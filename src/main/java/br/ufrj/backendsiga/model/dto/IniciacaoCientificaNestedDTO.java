@@ -5,7 +5,7 @@ import java.util.List;
 
 @Data
 public class IniciacaoCientificaNestedDTO {
-    private String id;
+    private Integer id;
     private String nome;
     private String descricao;
     private Double remuneracao;
