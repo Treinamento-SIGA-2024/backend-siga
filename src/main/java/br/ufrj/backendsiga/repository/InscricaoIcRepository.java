@@ -27,7 +27,7 @@ public interface InscricaoIcRepository extends JpaRepository<InscricaoIC, Intege
   List<InscricaoICDTO> findInscricoesIcsParaAprovacaoDoProfessor(Integer icId, Integer situacaoId); */
 
 
-  List<InscricaoICDTO> findAllByIniciacaoCientificaAndSituacaoInscricao(IniciacaoCientifica iniciacaoCientifica, SituacaoInscricao situacaoInscricao);
+  List<InscricaoIC> findInscricaoICByIniciacaoCientificaEqualsAndSituacaoInscricaoEquals(IniciacaoCientifica iniciacaoCientifica, SituacaoInscricao situacaoInscricao);
 //No converter found capable of converting from type [org.springframework.data.jpa.repository.query.AbstractJpaQuery$TupleConverter$TupleBackedMap] to type [br.ufrj.backendsiga.entity.DTO.InscricaoICDTO]
 
 /*   @Query(

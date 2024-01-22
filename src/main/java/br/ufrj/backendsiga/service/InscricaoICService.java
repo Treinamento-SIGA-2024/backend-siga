@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.service;
 
 import br.ufrj.backendsiga.entity.DTO.InscricaoICDTO;
 import br.ufrj.backendsiga.entity.model.IniciacaoCientifica;
+import br.ufrj.backendsiga.entity.model.InscricaoIC;
 import br.ufrj.backendsiga.entity.model.SituacaoInscricao;
 import br.ufrj.backendsiga.entity.model.Usuario;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
@@ -33,7 +34,7 @@ public class InscricaoICService {
         this.situacaoInscricaoRepository = situacaoInscricaoRepository;        
     }
 
-    public List<InscricaoICDTO> findInscricoesICProfessor(String matricula, Integer icId){
+    public List<InscricaoIC> findInscricoesICProfessor(String matricula, Integer icId){
         Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).
                 orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não existe no sistema."));
 
@@ -45,10 +46,24 @@ public class InscricaoICService {
         SituacaoInscricao teste3 = situacaoInscricaoRepository.findById(1).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Socorro"));        
 
 
-        List<InscricaoICDTO> teste = inscricaoIcRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(icProfessor, teste3);
+        List<InscricaoIC> teste = inscricaoIcRepository.findInscricaoICByIniciacaoCientificaEqualsAndSituacaoInscricaoEquals(icProfessor, teste3);
 
         return teste;
 
         
+    }
+
+    public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, String matricula){
+        InscricaoIC inscricaoICAluno = inscricaoIcRepository.findById(inscricaoId).
+                orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição da IC do aluno não encontrada."));
+        Usuario professorAvaliador = usuarioRepository.findUsuarioByMatricula(matricula)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário professor não encontrado."));
+        //ToDo verificar cargo do professor
+        SituacaoInscricao situacaoAtivo = situacaoInscricaoRepository.findByCodigo("001");
+
+        inscricaoICAluno.setSituacaoInscricao(situacaoAtivo);
+        inscricaoICAluno.setProfessor(professorAvaliador);
+        return inscricaoIcRepository.save(inscricaoICAluno);
+        //return  inscricaoICAluno;
     }
 }
