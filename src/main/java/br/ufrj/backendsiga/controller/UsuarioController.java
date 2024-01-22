@@ -1,6 +1,5 @@
 package br.ufrj.backendsiga.controller;
 
-import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

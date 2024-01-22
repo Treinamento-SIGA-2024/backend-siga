@@ -18,13 +18,12 @@ public class InscricaoICController {
     }
 
 
-    @PostMapping("/IC/{ic_id}/aluno/{aluno_id}/professor/{professor_id}/situacao/{codigo}")
+    @PostMapping("/IC/{ic_id}/aluno/{aluno_id}/professor/{professor_id}/situacao")
     public InscricaoIC createInscricaoIC(@PathVariable Integer ic_id,
                                          @PathVariable Integer aluno_id,
-                                         @PathVariable Integer professor_id,
-                                         @PathVariable String codigo) {
+                                         @PathVariable Integer professor_id) {
 
-         InscricaoIC inscricao = inscricaoICService.criarInscricaoIC(ic_id, aluno_id, professor_id, codigo);
+         InscricaoIC inscricao = inscricaoICService.criarInscricaoIC(ic_id, aluno_id, professor_id);
         return inscricao;
     }
 }

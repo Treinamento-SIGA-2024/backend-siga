@@ -54,7 +54,7 @@ public class InscricaoICService {
     }
 
     public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id,
-                                        Integer professor_id, String codigo) {
+                                        Integer professor_id) {
 
         List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
         List<String> cargosProfessorId = verificaCargoUsuario(professor_id);
@@ -80,8 +80,7 @@ public class InscricaoICService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário já possui uma IC remunerada.");
         }
 
-        //Tratar essa exceção no front
-        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo(codigo);
+        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo("000");
 
         InscricaoIC inscricaoIC = new InscricaoIC();
 
