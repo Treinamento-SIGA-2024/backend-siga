@@ -2,12 +2,11 @@ package br.ufrj.backendsiga.controller;
 
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.service.EstagioService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/estagio")
 public class EstagioController {
@@ -19,5 +18,10 @@ public class EstagioController {
     @GetMapping()
     public List<Estagio> listAll(){
         return estagioService.listAll();
+    }
+
+    @GetMapping("/id/{id}")
+    public Estagio getEstagio (@PathVariable Integer id) {
+        return estagioService.getEstagioById(id);
     }
 }
