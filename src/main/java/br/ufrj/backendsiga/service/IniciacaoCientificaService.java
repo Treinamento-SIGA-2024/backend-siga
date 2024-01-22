@@ -35,6 +35,11 @@ public class IniciacaoCientificaService {
                     "A iniciação científica precisa conter um nome."
             );
         }
+        if (iniciacaoCientifica.getRemuneracao() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A iniciação científica precisa conter a remuneração (utilize 0 para não-remunerada)"
+            );
+        }
 
         //Por ser uma relação ManyToMany, precisamos de cautela, para evitar adulteração pela parte do front:
         //1. Pega os professores do RequestBody e os procura por id;
