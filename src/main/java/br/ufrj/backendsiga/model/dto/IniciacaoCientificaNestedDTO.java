@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.model.dto;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class IniciacaoCientificaNestedDTO {
@@ -10,9 +11,9 @@ public class IniciacaoCientificaNestedDTO {
     private String descricao;
     private Double remuneracao;
     private Integer cargaHorariaSemanal;
-    private List<InscricaoICDTO> inscricoes;
-    private List<TopicoDTO> topicos;
-    private List<UsuarioDTO> professores;
+    private Set<InscricaoICDTO> inscricoes;
+    private Set<TopicoDTO> topicos;
+    private Set<UsuarioDTO> professores;
     private SituacaoCriacaoICDTO situacaoCriacao;
     private UsuarioDTO coordenadorAvaliador;
 }

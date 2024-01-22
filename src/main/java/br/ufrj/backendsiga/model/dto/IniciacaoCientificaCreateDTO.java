@@ -1,11 +1,17 @@
 package br.ufrj.backendsiga.model.dto;
 
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+import java.util.List;
+import java.util.Set;
+
+@Data
 public class IniciacaoCientificaCreateDTO {
     private String nome;
     private String descricao;
     private Double remuneracao;
     private Integer cargaHorariaSemanal;
-    private List<TopicoDTO> topicos;
+    private Set<TopicoDTO> topicos;
+    private Set<UsuarioDTO> professores;
 }
