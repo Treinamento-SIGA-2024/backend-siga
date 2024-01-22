@@ -11,4 +11,5 @@ public interface IniciacaoCientificaMapper {
     IniciacaoCientificaMapper INSTANCE = Mappers.getMapper(IniciacaoCientificaMapper.class);
 
     IniciacaoCientificaNestedDTO toNestedDTO(IniciacaoCientifica iniciacaoCientifica);
+    IniciacaoCientifica toEntity(IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO);
 }
