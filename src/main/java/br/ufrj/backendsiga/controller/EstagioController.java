@@ -8,6 +8,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
+@CrossOrigin
 @RequestMapping("/estagio")
 public class EstagioController {
     private final EstagioService estagioService;
