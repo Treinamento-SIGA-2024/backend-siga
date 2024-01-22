@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class UsuarioService {
                     "Usuário de matrícula " +
                     usuario.getMatricula() +
                     " e cargos: " +
-                    usuario.getCargos().stream().map(c -> c.getNome() + ", ") +
+                    usuario.getCargos().stream().map(c -> c.getNome() + ", ").collect(Collectors.joining(", ")) +
                     "não possui cargo de " +
                     cargo.getNome() + "."
             );
