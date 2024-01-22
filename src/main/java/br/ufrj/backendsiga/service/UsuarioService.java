@@ -9,21 +9,59 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final CargoService cargoService;
 
-    public Usuario getUsuarioByMatricula(String matricula) {
-        Optional<Usuario> usuario = usuarioRepository.findByMatricula(matricula);
-        if (usuario.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
-        return usuario.get();
+    public List<Usuario> getListUsuarioByIdAndAssertCargoByNome(List<Integer> ids, String cargo) {
+        List<Usuario> usuarios = usuarioRepository.findAllById(ids);
+        usuarios.forEach(usuario -> assertUsuarioCargoByNome(usuario, Cargo.PROFESSOR));
+        return usuarios;
+    }
+
+    public Usuario getUsuarioByMatriculaAndAssertCargoByNome(String matricula, String cargo) {
+        Usuario usuario = getUsuarioByMatricula(matricula);
+        assertUsuarioCargoByNome(usuario, cargo);
+        return usuario;
+    }
+    public Usuario getUsuarioByMatriculaAndAssertCargo(String matricula, Cargo cargo) {
+        Usuario usuario = getUsuarioByMatricula(matricula);
+        assertUsuarioCargo(usuario, cargo);
+        return usuario;
+    }
+
+
+    public void assertUsuarioCargoByNome(Usuario usuario, String cargo) {
+        assertUsuarioCargo(usuario, cargoService.getCargoByNome(cargo));
     }
     public void assertUsuarioCargo(Usuario usuario, Cargo cargo) {
         if (!usuario.getCargos().contains(cargo)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuário não possui cargo de " + cargo.getNome() + ".");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Usuário de matrícula " +
+                    usuario.getMatricula() +
+                    " e cargos: " +
+                    usuario.getCargos().stream().map(c -> c.getNome() + ", ") +
+                    "não possui cargo de " +
+                    cargo.getNome() + "."
+            );
         }
     };
+
+    public Usuario getUsuarioByMatricula(String matricula) {
+        Optional<Usuario> usuario = usuarioRepository.findByMatricula(matricula);
+        if (usuario.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Usuário de matrícula " +
+                            matricula +
+                            " não encontrado."
+            );
+        }
+        return usuario.get();
+    }
+
 }
