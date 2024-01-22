@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-@Entity(name = "Iniciacao_Cientifica")
+@Entity(name = "iniciacao_cientifica")
 public class IniciacaoCientifica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,26 +20,33 @@ public class IniciacaoCientifica {
 
     private Double remuneracao;
 
-    @Column(name = "Carga_Horaria_Semanal")
+    @Column(name = "carga_horaria_semanal")
     private Integer cargaHorariaSemanal;
-
-    @ManyToOne
-    @JoinColumn(name = "Coordenador_Id")
-    private Usuario coordenador;
 
     @OneToMany(mappedBy = "iniciacaoCientifica")
     private Set<InscricaoIC> inscricoes;
 
     @ManyToMany
     @JoinTable(
-            name = "IC_Topico",
-            joinColumns = @JoinColumn(name = "Iniciacao_Cientifica_Id"),
-            inverseJoinColumns = @JoinColumn(name = "Topico_Id")
+            name = "r_ic_topico",
+            joinColumns = @JoinColumn(name = "ic_id"),
+            inverseJoinColumns = @JoinColumn(name = "topico_id")
     )
     private Set<Topico> topicos;
 
+    @ManyToMany
+    @JoinTable(
+            name = "r_professor_ic",
+            joinColumns = @JoinColumn(name = "ic_id"),
+            inverseJoinColumns = @JoinColumn(name = "professor_id")
+    )
+    private Set<Usuario> professores;
+
     @ManyToOne
-    @JoinColumn(name = "Situacao_Criacao_Id", nullable = false)
+    @JoinColumn(name = "situacao_criacao_id", nullable = false)
     private SituacaoCriacaoIC situacaoCriacao;
 
+    @ManyToOne
+    @JoinColumn(name = "coordenador_avaliador_id")
+    private Usuario coordenadorAvaliador;
 }

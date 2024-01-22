@@ -4,25 +4,25 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity(name = "Inscricao_IC")
+@Entity(name = "inscricao_ic")
 public class InscricaoIC {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "Aluno_Id", nullable = false)
+    @JoinColumn(name = "aluno_id", nullable = false)
     private Usuario aluno;
 
     @ManyToOne
-    @JoinColumn(name = "IC_Id", nullable = false)
+    @JoinColumn(name = "ic_id", nullable = false)
     private IniciacaoCientifica iniciacaoCientifica;
 
     @ManyToOne
-    @JoinColumn(name = "Professor_Id")
+    @JoinColumn(name = "professor_avaliador_id")
     private Usuario professor;
 
     @ManyToOne
-    @JoinColumn(name = "Situacao_Inscricao_Id", nullable = false)
+    @JoinColumn(name = "situacao_id", nullable = false)
     private SituacaoInscricao situacaoInscricao;
 }

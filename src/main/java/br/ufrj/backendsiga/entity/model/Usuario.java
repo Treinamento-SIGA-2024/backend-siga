@@ -7,6 +7,8 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "usuario")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //TIRAR DEPOIS HEIN
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,29 +17,42 @@ public class Usuario {
     @Column(unique = true, nullable = false, length = 30)
     private String matricula;
 
-    @Column(nullable = false, length = 40)
-    private String nome;
-
     @Column(unique = true, nullable = false, length = 40)
     private String email;
 
     @Column(nullable = false, length = 40)
+    private String nome;
+
+    @Column(nullable = false, length = 40)
     private String senha;
 
-    @OneToMany(mappedBy = "coordenador")
-    private Set<IniciacaoCientifica> iniciacoesCientificas;
+    @ManyToMany
+    @JoinTable(
+            name = "r_usuario_cargo",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "cargo_id")
+    )
+    private Set<Cargo> cargos;
 
+    //Informações de aluno
     @OneToMany(mappedBy = "aluno")
     private Set<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "aluno")
     private Set<InscricaoEstagio> inscricoesEstagio;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Usuario_Cargo",
-            joinColumns = @JoinColumn(name = "Usuario_Id"),
-            inverseJoinColumns = @JoinColumn(name = "Cargo_Id")
-    )
-    private Set<Cargo> cargos;
+    //Informações de coordenador
+    @OneToMany(mappedBy = "coordenadorAvaliador")
+    Set<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
+
+    @OneToMany(mappedBy = "coordenadorAvaliador")
+    Set<InscricaoEstagio> inscricoesEstagioAvaliadas;
+
+    //Informações de professor
+    @ManyToMany(mappedBy = "professores")
+    private Set<IniciacaoCientifica> iniciacoesCientificas;
+
+    @OneToMany(mappedBy = "professor")
+    private Set<InscricaoIC> inscricoesICAvaliadas;
+
 }
