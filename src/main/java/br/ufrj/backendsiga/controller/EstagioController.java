@@ -2,13 +2,11 @@ package br.ufrj.backendsiga.controller;
 
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.service.EstagioService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/estagio")
 public class EstagioController {
