@@ -18,9 +18,9 @@ public class SituacaoCriacaoICService {
         Optional<SituacaoCriacaoIC> situacaoCriacaoIC = situacaoCriacaoICRepository.findByCodigo(codigo);
         if (situacaoCriacaoIC.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Código de situação de inscrição \"" +
+                    "Código de situação de criação \"" +
                     codigo +
-                    "\" em iniciação científica não encontrado");
+                    "\" de iniciação científica não encontrado");
         }
         return situacaoCriacaoIC.get();
     }
