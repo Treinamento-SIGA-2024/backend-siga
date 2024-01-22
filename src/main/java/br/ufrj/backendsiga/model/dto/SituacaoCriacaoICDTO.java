@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class SituacaoCriacaoICDTO {
     private Integer id;
-    private String nome;
     private String codigo;
+    private String descricao;
 }
