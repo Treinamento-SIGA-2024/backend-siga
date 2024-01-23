@@ -1,9 +1,12 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity(name = "iniciacao_cientifica")
@@ -24,15 +27,12 @@ public class IniciacaoCientifica {
     private Integer cargaHorariaSemanal;
 
     @OneToMany(mappedBy = "iniciacaoCientifica")
-    private Set<InscricaoIC> inscricoes;
+    @JsonManagedReference
+    private List<InscricaoIC> inscricoes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "r_ic_topico",
-            joinColumns = @JoinColumn(name = "ic_id"),
-            inverseJoinColumns = @JoinColumn(name = "topico_id")
-    )
-    private Set<Topico> topicos;
+    @ManyToMany(mappedBy = "iniciacoesCientificas")
+    @JsonIgnoreProperties("iniciacoesCientificas")
+    private List<Topico> topicos;
 
     @ManyToMany
     @JoinTable(
@@ -40,13 +40,16 @@ public class IniciacaoCientifica {
             joinColumns = @JoinColumn(name = "ic_id"),
             inverseJoinColumns = @JoinColumn(name = "professor_id")
     )
-    private Set<Usuario> professores;
+    @JsonIgnoreProperties("iniciacoesCientificas")
+    private List<Usuario> professores;
 
     @ManyToOne
     @JoinColumn(name = "situacao_criacao_id", nullable = false)
+    @JsonBackReference
     private SituacaoCriacaoIC situacaoCriacao;
 
     @ManyToOne
     @JoinColumn(name = "coordenador_avaliador_id")
+    @JsonBackReference
     private Usuario coordenadorAvaliador;
 }
