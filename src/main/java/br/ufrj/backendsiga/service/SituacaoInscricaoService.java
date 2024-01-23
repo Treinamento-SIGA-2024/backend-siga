@@ -4,6 +4,8 @@ import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SituacaoInscricaoService {
     private final SituacaoInscricaoRepository situacaoInscricaoRepository;
@@ -12,6 +14,6 @@ public class SituacaoInscricaoService {
         this.situacaoInscricaoRepository = situacaoInscricaoRepository;
     }
     public SituacaoInscricao findByCodigo(String codigo) {
-        return situacaoInscricaoRepository.findByCodigo(codigo);
+        return situacaoInscricaoRepository.findByCodigo(codigo).orElseThrow();
     }
 }

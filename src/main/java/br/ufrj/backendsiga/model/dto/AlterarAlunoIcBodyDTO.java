@@ -1,6 +1,9 @@
 package br.ufrj.backendsiga.model.dto;
 
-public class AlterarAlunoIcBodyDTO {
-    private String matricula;
+import lombok.Data;
 
+@Data
+public class AlterarAlunoIcBodyDTO {
+    private Integer icId;
+    private String matricula;
 }

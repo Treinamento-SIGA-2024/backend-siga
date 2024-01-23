@@ -1,9 +1,14 @@
 package br.ufrj.backendsiga.service;
 
+import br.ufrj.backendsiga.model.dto.InscricaoICDTO;
+import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
+import br.ufrj.backendsiga.model.dto.SituacaoInscricaoDTO;
+import br.ufrj.backendsiga.model.dto.UsuarioDTO;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
 import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
 import br.ufrj.backendsiga.model.entity.Usuario;
+import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.InscricaoIcRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
@@ -32,27 +37,25 @@ public class InscricaoICService {
         this.situacaoInscricaoRepository = situacaoInscricaoRepository;        
     }
 
-    public List<InscricaoIC> findInscricoesICProfessor(String matricula, Integer icId){
+    public List<InscricaoICPendentesDTO> findInscricoesICProfessor(String matricula, Integer icId){
         Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).
                 orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não existe no sistema."));
         //ToDo NOT FOUDN IC ID
 
         IniciacaoCientifica icProfessor = iniciacaoCientificaRepository.findById(icId)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não é participante dessa iniciação cientifica."));
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "IC não encontrado."));
 
         if(!icProfessor.getProfessores().contains(professor)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não tem acesso a essa ic.");
         }
 
 
-        SituacaoInscricao teste = situacaoInscricaoRepository.findById(1).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Socorro"));
+        SituacaoInscricao situacaoPendente = situacaoInscricaoRepository.findByCodigo("000").orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Situação de inscrição pendente não encontrada."));
 
 
-        List<InscricaoIC> teste2 = inscricaoIcRepository.findAllByIniciacaoCientifica(icProfessor);
+        List<InscricaoIC> inscricoesPendentes = inscricaoIcRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(icProfessor, situacaoPendente);
 
-        return teste2;
-
-        
+        return inscricoesPendentes.stream().map(ic -> InscricaoICMapper.INSTANCE.toPendentesDTO(ic)).toList();
     }
 
     public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, String matricula){
@@ -61,7 +64,7 @@ public class InscricaoICService {
         Usuario professorAvaliador = usuarioRepository.findUsuarioByMatricula(matricula)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário professor não encontrado."));
         //ToDo verificar cargo do professor
-        SituacaoInscricao situacaoAtivo = situacaoInscricaoRepository.findByCodigo("001");
+        SituacaoInscricao situacaoAtivo = situacaoInscricaoRepository.findByCodigo("001").orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         inscricaoICAluno.setSituacaoInscricao(situacaoAtivo);
         inscricaoICAluno.setProfessor(professorAvaliador);
