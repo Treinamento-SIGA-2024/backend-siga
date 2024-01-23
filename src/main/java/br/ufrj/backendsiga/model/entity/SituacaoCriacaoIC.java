@@ -1,13 +1,18 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity(name = "situacao_criacao_ic")
 public class SituacaoCriacaoIC {
+    public final static String PENDENTE = "000";
+    public final static String ACEITA = "001";
+    public final static String RECUSADA = "002";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,7 +23,8 @@ public class SituacaoCriacaoIC {
     private String descricao;
 
     @OneToMany(mappedBy = "situacaoCriacao")
-    private Set<IniciacaoCientifica> iniciacoesCientificas;
+    @JsonManagedReference
+    private List<IniciacaoCientifica> iniciacoesCientificas;
 
 
 }
