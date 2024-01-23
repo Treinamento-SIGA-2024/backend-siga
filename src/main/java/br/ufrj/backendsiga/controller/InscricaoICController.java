@@ -1,9 +1,8 @@
 package br.ufrj.backendsiga.controller;
 
-import br.ufrj.backendsiga.model.dto.InscricaoICDTO;
+import br.ufrj.backendsiga.model.dto.AlterarSituacaoAlunoIcBodyDTO;
 import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
-import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.service.InscricaoICService;
 
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +34,9 @@ public class InscricaoICController {
         return inscricaoICService.findInscricoesICProfessor(matricula, icId);
     }
 
-    @PutMapping("/ic/{matricula}/{inscricaoId}")
-    public InscricaoIC alterarSituacaoInscricaoAluno(@PathVariable Integer inscricaoId, @PathVariable String matricula){
-        return inscricaoICService.alterarInscricaoAluno(inscricaoId, matricula);
+    @PutMapping("/ic/{inscricaoId}")
+    public void alterarSituacaoInscricaoAluno(@PathVariable Integer inscricaoId, @RequestBody AlterarSituacaoAlunoIcBodyDTO bodyAlterar){
+        inscricaoICService.alterarInscricaoAluno(inscricaoId, bodyAlterar);
     }
     
 }

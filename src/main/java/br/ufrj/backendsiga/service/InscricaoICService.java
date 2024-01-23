@@ -1,9 +1,6 @@
 package br.ufrj.backendsiga.service;
 
-import br.ufrj.backendsiga.model.dto.InscricaoICDTO;
-import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
-import br.ufrj.backendsiga.model.dto.SituacaoInscricaoDTO;
-import br.ufrj.backendsiga.model.dto.UsuarioDTO;
+import br.ufrj.backendsiga.model.dto.*;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
 import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
@@ -58,15 +55,19 @@ public class InscricaoICService {
         return inscricoesPendentes.stream().map(ic -> InscricaoICMapper.INSTANCE.toPendentesDTO(ic)).toList();
     }
 
-    public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, String matricula){
+    public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, AlterarSituacaoAlunoIcBodyDTO body){
         InscricaoIC inscricaoICAluno = inscricaoIcRepository.findById(inscricaoId).
                 orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição da IC do aluno não encontrada."));
-        Usuario professorAvaliador = usuarioRepository.findUsuarioByMatricula(matricula)
+        Usuario professorAvaliador = usuarioRepository.findUsuarioByMatricula(body.getMatricula())
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário professor não encontrado."));
         //ToDo verificar cargo do professor
-        SituacaoInscricao situacaoAtivo = situacaoInscricaoRepository.findByCodigo("001").orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        IniciacaoCientifica ic = iniciacaoCientificaRepository.findById(body.getIcId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ic não encontrada"));
+        if(!ic.getProfessores().contains(professorAvaliador) || !ic.getInscricoes().contains(inscricaoICAluno)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
+        }
+        SituacaoInscricao situacaoNova = situacaoInscricaoRepository.findByCodigo(body.getCodigo()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Situação não encontrada."));
 
-        inscricaoICAluno.setSituacaoInscricao(situacaoAtivo);
+        inscricaoICAluno.setSituacaoInscricao(situacaoNova);
         inscricaoICAluno.setProfessor(professorAvaliador);
         return inscricaoIcRepository.save(inscricaoICAluno);
     }
