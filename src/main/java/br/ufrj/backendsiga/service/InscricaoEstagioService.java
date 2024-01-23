@@ -1,7 +1,7 @@
 package br.ufrj.backendsiga.service;
 
-import br.ufrj.backendsiga.entity.model.InscricaoEstagio;
-import br.ufrj.backendsiga.entity.model.SituacaoInscricao;
+import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
+import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
 import br.ufrj.backendsiga.repository.InscricaoEstagioRepository;
 import org.springframework.stereotype.Service;
 

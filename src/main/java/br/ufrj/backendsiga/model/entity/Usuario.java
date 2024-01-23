@@ -1,9 +1,9 @@
-package br.ufrj.backendsiga.entity.model;
+package br.ufrj.backendsiga.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -32,27 +32,27 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "cargo_id")
     )
-    private Set<Cargo> cargos;
+    private List<Cargo> cargos;
 
     //Informações de aluno
     @OneToMany(mappedBy = "aluno")
-    private Set<InscricaoIC> inscricoesIC;
+    private List<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "aluno")
-    private Set<InscricaoEstagio> inscricoesEstagio;
+    private List<InscricaoEstagio> inscricoesEstagio;
 
     //Informações de coordenador
     @OneToMany(mappedBy = "coordenadorAvaliador")
-    Set<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
+    List<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
 
     @OneToMany(mappedBy = "coordenadorAvaliador")
-    Set<InscricaoEstagio> inscricoesEstagioAvaliadas;
+    List<InscricaoEstagio> inscricoesEstagioAvaliadas;
 
     //Informações de professor
     @ManyToMany(mappedBy = "professores")
-    private Set<IniciacaoCientifica> iniciacoesCientificas;
+    private List<IniciacaoCientifica> iniciacoesCientificas;
 
     @OneToMany(mappedBy = "professor")
-    private Set<InscricaoIC> inscricoesICAvaliadas;
+    private List<InscricaoIC> inscricoesICAvaliadas;
 
 }

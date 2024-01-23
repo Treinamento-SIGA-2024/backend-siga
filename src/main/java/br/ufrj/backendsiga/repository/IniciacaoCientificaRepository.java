@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.ufrj.backendsiga.entity.model.IniciacaoCientifica;
-import br.ufrj.backendsiga.entity.model.Usuario;
+import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
+import br.ufrj.backendsiga.model.entity.Usuario;
 
 @Repository
 public interface IniciacaoCientificaRepository extends JpaRepository<IniciacaoCientifica, Integer> {
@@ -18,6 +18,6 @@ public interface IniciacaoCientificaRepository extends JpaRepository<IniciacaoCi
       "WHERE u.id = 2 AND ic.id = 1;")
   IniciacaoCientifica findIniciacaoCientificaById(); */
 
-  Optional<IniciacaoCientifica> findIniciacaoCientificaByProfessores(Usuario professores);
+  Optional<IniciacaoCientifica> findAllByProfessores(Usuario professores);
 
 }

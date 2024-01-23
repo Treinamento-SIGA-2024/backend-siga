@@ -1,6 +1,6 @@
 package br.ufrj.backendsiga.service;
 
-import br.ufrj.backendsiga.entity.model.Estagio;
+import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.repository.EstagioRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,17 +1,15 @@
 package br.ufrj.backendsiga.service;
 
-import br.ufrj.backendsiga.entity.DTO.InscricaoICDTO;
-import br.ufrj.backendsiga.entity.model.IniciacaoCientifica;
-import br.ufrj.backendsiga.entity.model.InscricaoIC;
-import br.ufrj.backendsiga.entity.model.SituacaoInscricao;
-import br.ufrj.backendsiga.entity.model.Usuario;
+import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
+import br.ufrj.backendsiga.model.entity.InscricaoIC;
+import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
+import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.InscricaoIcRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,18 +35,22 @@ public class InscricaoICService {
     public List<InscricaoIC> findInscricoesICProfessor(String matricula, Integer icId){
         Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).
                 orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não existe no sistema."));
-
         //ToDo NOT FOUDN IC ID
 
-        IniciacaoCientifica icProfessor = iniciacaoCientificaRepository.findIniciacaoCientificaByProfessores(professor)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não é participante dessa iniciação cientifica."));
-        
-        SituacaoInscricao teste3 = situacaoInscricaoRepository.findById(1).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Socorro"));        
+        IniciacaoCientifica icProfessor = iniciacaoCientificaRepository.findById(icId)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não é participante dessa iniciação cientifica."));
+
+        if(!icProfessor.getProfessores().contains(professor)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não tem acesso a essa ic.");
+        }
 
 
-        List<InscricaoIC> teste = inscricaoIcRepository.findInscricaoICByIniciacaoCientificaEqualsAndSituacaoInscricaoEquals(icProfessor, teste3);
+        SituacaoInscricao teste = situacaoInscricaoRepository.findById(1).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Socorro"));
 
-        return teste;
+
+        List<InscricaoIC> teste2 = inscricaoIcRepository.findAllByIniciacaoCientifica(icProfessor);
+
+        return teste2;
 
         
     }
@@ -64,6 +66,5 @@ public class InscricaoICService {
         inscricaoICAluno.setSituacaoInscricao(situacaoAtivo);
         inscricaoICAluno.setProfessor(professorAvaliador);
         return inscricaoIcRepository.save(inscricaoICAluno);
-        //return  inscricaoICAluno;
     }
 }

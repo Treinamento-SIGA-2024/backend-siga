@@ -2,14 +2,10 @@ package br.ufrj.backendsiga.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import br.ufrj.backendsiga.entity.DTO.InscricaoICDTO;
-import br.ufrj.backendsiga.entity.model.IniciacaoCientifica;
-import br.ufrj.backendsiga.entity.model.InscricaoIC;
-import br.ufrj.backendsiga.entity.model.SituacaoInscricao;
+import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
+import br.ufrj.backendsiga.model.entity.InscricaoIC;
 
 
 @Repository
@@ -27,7 +23,7 @@ public interface InscricaoIcRepository extends JpaRepository<InscricaoIC, Intege
   List<InscricaoICDTO> findInscricoesIcsParaAprovacaoDoProfessor(Integer icId, Integer situacaoId); */
 
 
-  List<InscricaoIC> findInscricaoICByIniciacaoCientificaEqualsAndSituacaoInscricaoEquals(IniciacaoCientifica iniciacaoCientifica, SituacaoInscricao situacaoInscricao);
+  List<InscricaoIC> findAllByIniciacaoCientifica(IniciacaoCientifica iniciacaoCientifica);
 //No converter found capable of converting from type [org.springframework.data.jpa.repository.query.AbstractJpaQuery$TupleConverter$TupleBackedMap] to type [br.ufrj.backendsiga.entity.DTO.InscricaoICDTO]
 
 /*   @Query(

@@ -1,9 +1,6 @@
 package br.ufrj.backendsiga.controller;
 
-import br.ufrj.backendsiga.entity.DTO.InscricaoICDTO;
-import br.ufrj.backendsiga.entity.model.IniciacaoCientifica;
-import br.ufrj.backendsiga.entity.model.InscricaoIC;
-import br.ufrj.backendsiga.entity.model.Usuario;
+import br.ufrj.backendsiga.model.entity.InscricaoIC;
 import br.ufrj.backendsiga.service.InscricaoICService;
 
 import org.springframework.web.bind.annotation.*;
