@@ -3,12 +3,14 @@ import br.ufrj.backendsiga.model.entity.*;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,19 @@ public class IniciacaoCientificaService {
     private final CargoService cargoService;
     private final SituacaoCriacaoICService situacaoCriacaoService;
     private final TopicoService topicoService;
+
+    public IniciacaoCientifica getIniciacaoCientificaById(Integer icId) {
+        Optional<IniciacaoCientifica> optIc = iniciacaoCientificaRepository.findById(icId);
+
+        if (optIc.isEmpty()) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, 
+                "Iniciação científica inexistente."
+            );
+        }
+
+        return optIc.get();
+    }
 
     @Transactional
     public List<IniciacaoCientifica> listIniciacaoCientificaByProfessorMatricula(String matricula) {
