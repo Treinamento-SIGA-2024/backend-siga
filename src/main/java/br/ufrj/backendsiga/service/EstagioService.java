@@ -1,6 +1,6 @@
 package br.ufrj.backendsiga.service;
 
-import br.ufrj.backendsiga.model.DTO.EstagioCreateDTO;
+import br.ufrj.backendsiga.model.dto.EstagioCreateDTO;
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.repository.EstagioRepository;
 import org.springframework.http.HttpStatus;

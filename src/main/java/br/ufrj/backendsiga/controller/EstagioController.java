@@ -1,6 +1,6 @@
 package br.ufrj.backendsiga.controller;
 
-import br.ufrj.backendsiga.model.DTO.EstagioCreateDTO;
+import br.ufrj.backendsiga.model.dto.EstagioCreateDTO;
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.service.EstagioService;
 import org.springframework.web.bind.annotation.*;
