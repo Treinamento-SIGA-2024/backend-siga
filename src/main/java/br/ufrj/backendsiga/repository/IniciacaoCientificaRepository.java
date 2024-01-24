@@ -11,5 +11,9 @@ import java.util.Set;
 
 @Repository
 public interface IniciacaoCientificaRepository extends JpaRepository<IniciacaoCientifica, Integer> {
+    
     List<IniciacaoCientifica> findAllByProfessoresIsContaining(Usuario professor);
+
+    Optional<IniciacaoCientifica> findAllByProfessores(Usuario professores);
+
 }

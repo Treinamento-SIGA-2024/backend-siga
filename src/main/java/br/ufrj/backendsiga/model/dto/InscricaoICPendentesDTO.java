@@ -3,9 +3,8 @@ package br.ufrj.backendsiga.model.dto;
 import lombok.Data;
 
 @Data
-public class InscricaoICDTO {
+public class InscricaoICPendentesDTO {
     private Integer id;
     private UsuarioDTO aluno;
-    private UsuarioDTO professorAvaliador;
     private SituacaoInscricaoDTO situacaoInscricao;
 }

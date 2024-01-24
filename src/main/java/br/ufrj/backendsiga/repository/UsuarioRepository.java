@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByMatricula(String matricula);
+
+    Optional<Usuario> findUsuarioByMatricula(String matricula);
 }
