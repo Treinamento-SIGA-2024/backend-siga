@@ -21,7 +21,6 @@ public class InscricaoICController {
                                          @PathVariable Integer aluno_id,
                                          @PathVariable Integer professor_id) {
 
-         InscricaoIC inscricao = inscricaoICService.criarInscricaoIC(ic_id, aluno_id, professor_id);
-        return inscricao;
+        return inscricaoICService.criarInscricaoIC(ic_id, aluno_id, professor_id);
     }
 }

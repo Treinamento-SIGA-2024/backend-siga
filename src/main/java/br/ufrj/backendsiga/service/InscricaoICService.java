@@ -67,14 +67,18 @@ public class InscricaoICService {
     public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id,
                                         Integer professor_id) {
 
+        final String CARGO_ALUNO = "Aluno";
+        final String CARGO_PROFESSOR = "Professor";
+        final String CODIGO_PADRAO = "000";
+
         List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
         List<String> cargosProfessorId = verificaCargoUsuario(professor_id);
 
-        if(!cargosAlunoId.contains("Aluno")) {
+        if(!cargosAlunoId.contains(CARGO_ALUNO)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
         }
 
-        if(!cargosProfessorId.contains("Professor")) {
+        if(!cargosProfessorId.contains(CARGO_PROFESSOR)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
         }
 
@@ -95,7 +99,7 @@ public class InscricaoICService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inscrito nessa IC");
         }
 
-        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo("000");
+        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
 
         InscricaoIC inscricaoIC = new InscricaoIC();
 
