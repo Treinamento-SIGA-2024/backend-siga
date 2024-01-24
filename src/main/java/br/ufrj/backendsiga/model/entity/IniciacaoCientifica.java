@@ -1,8 +1,11 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,8 +26,9 @@ public class IniciacaoCientifica {
     @Column(name = "carga_horaria_semanal")
     private Integer cargaHorariaSemanal;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "iniciacaoCientifica")
-    private Set<InscricaoIC> inscricoes;
+    private List<InscricaoIC> inscricoes;
 
     @ManyToMany
     @JoinTable(

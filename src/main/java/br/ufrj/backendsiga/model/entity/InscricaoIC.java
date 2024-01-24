@@ -16,6 +16,7 @@ public class InscricaoIC {
     @JsonBackReference
     private Usuario aluno;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "ic_id", nullable = false)
     private IniciacaoCientifica iniciacaoCientifica;

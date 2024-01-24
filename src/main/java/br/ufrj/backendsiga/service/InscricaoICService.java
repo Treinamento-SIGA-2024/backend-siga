@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,17 +54,31 @@ public class InscricaoICService {
         return false;
     }
 
+    public boolean verificaEntradaDuplicada(Optional<Usuario> aluno, Integer ic_id) {
+        List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+
+        for(InscricaoIC inscricao : inscricoes) {
+            Integer id = inscricao.getIniciacaoCientifica().getId();
+            if (Objects.equals(id, ic_id)) return true;
+        }
+        return false;
+    }
+
     public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id,
-                                        Integer professor_id, String codigo) {
+                                        Integer professor_id) {
+
+        final String CARGO_ALUNO = "Aluno";
+        final String CARGO_PROFESSOR = "Professor";
+        final String CODIGO_PADRAO = "000";
 
         List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
         List<String> cargosProfessorId = verificaCargoUsuario(professor_id);
 
-        if(!cargosAlunoId.contains("Aluno")) {
+        if(!cargosAlunoId.contains(CARGO_ALUNO)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
         }
 
-        if(!cargosProfessorId.contains("Professor")) {
+        if(!cargosProfessorId.contains(CARGO_PROFESSOR)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
         }
 
@@ -80,8 +95,11 @@ public class InscricaoICService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário já possui uma IC remunerada.");
         }
 
-        //Tratar essa exceção no front
-        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo(codigo);
+        if(verificaEntradaDuplicada(aluno, ic_id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inscrito nessa IC");
+        }
+
+        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
 
         InscricaoIC inscricaoIC = new InscricaoIC();
 
