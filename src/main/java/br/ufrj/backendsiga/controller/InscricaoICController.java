@@ -31,7 +31,6 @@ public class InscricaoICController {
 
     @GetMapping("/IC/aluno/{aluno_id}")
     public List<InscricaoIC> verInscricoesIC(@PathVariable Integer aluno_id){
-        List<InscricaoIC> inscricoes = inscricaoICService.verInscricoesIC(aluno_id);
-        return inscricoes;
+        return inscricaoICService.verInscricoesIC(aluno_id);
     }
 }

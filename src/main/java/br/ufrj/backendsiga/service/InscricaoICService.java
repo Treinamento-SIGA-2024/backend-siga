@@ -95,15 +95,16 @@ public class InscricaoICService {
 
     public List<InscricaoIC> verInscricoesIC(Integer aluno_id){
 
+        final String CARGO_ALUNO = "Aluno";
+
         Optional<Usuario> aluno = usuarioRepository.findById(aluno_id);
 
         List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
-        if(!cargosAlunoId.contains("Aluno")){
+        if(!cargosAlunoId.contains(CARGO_ALUNO)){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "O usuário não é um aluno");
         }
 
         List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
-        System.out.println(inscricoes);
         if(inscricoes.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui uma IC");
         }
