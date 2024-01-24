@@ -1,5 +1,6 @@
 package br.ufrj.backendsiga.service;
 
+import br.ufrj.backendsiga.model.DTO.EstagioCreateDTO;
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.repository.EstagioRepository;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,21 @@ public class EstagioService {
         );
 
         return estagio;
-    }
+    };
+
+    public Estagio createEstagio(EstagioCreateDTO dto) {
+
+        Estagio novoEstagio = new Estagio();
+
+        novoEstagio.setCargo(dto.getCargo());
+        novoEstagio.setEmpresa(dto.getEmpresa());
+        novoEstagio.setRemuneracao(dto.getRemuneracao());
+        novoEstagio.setCargaHorariaSemanal(dto.getCargaHorariaSemanal());
+        novoEstagio.setQuantidadeVagas(dto.getQuantidadeVagas());
+        novoEstagio.setModalidade(dto.getModalidade());
+        novoEstagio.setDescricao(dto.getDescricao());
+
+        return estagioRepository.save(novoEstagio);
+    };
 
 }
