@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class InscricaoEstagioPendentesDTO {
+    private Integer id;
     private EstagioCreateDTO estagio;
     private SituacaoInscricaoDTO situacaoInscricao;
     private UsuarioDTO aluno;
