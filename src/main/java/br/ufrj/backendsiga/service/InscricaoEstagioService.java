@@ -1,8 +1,9 @@
 package br.ufrj.backendsiga.service;
 
-import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
-import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
-import br.ufrj.backendsiga.repository.InscricaoEstagioRepository;
+import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
+import br.ufrj.backendsiga.model.entity.*;
+import br.ufrj.backendsiga.repository.*;
+import org.hibernate.mapping.Formula;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,9 +15,21 @@ public class InscricaoEstagioService {
     private final InscricaoEstagioRepository inscricaoEstagioRepository;
     private final SituacaoInscricaoService situacaoInscricaoService;
 
-    public InscricaoEstagioService(InscricaoEstagioRepository inscricaoEstagioRepository, SituacaoInscricaoService situacaoInscricaoService) {
+    private final EstagioRepository estagioRepository;
+
+    private final UsuarioRepository usuarioRepository;
+    private final CargoRepository cargoRepository;
+
+    public InscricaoEstagioService(InscricaoEstagioRepository inscricaoEstagioRepository,
+                                   SituacaoInscricaoService situacaoInscricaoService,
+                                   EstagioRepository estagioRepository,
+                                   UsuarioRepository usuarioRepository,
+                                   CargoRepository cargoRepository) {
         this.inscricaoEstagioRepository = inscricaoEstagioRepository;
         this.situacaoInscricaoService = situacaoInscricaoService;
+        this.estagioRepository = estagioRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.cargoRepository = cargoRepository;
     }
 
     public InscricaoEstagio findById(Integer id) {
@@ -49,5 +62,25 @@ public class InscricaoEstagioService {
         SituacaoInscricao rejeitado = situacaoInscricaoService.findByCodigo("002");
         inscricaoEstagio.setSituacaoInscricao(rejeitado);
         return inscricaoEstagioRepository.save(inscricaoEstagio);
+    }
+
+    public InscricaoEstagio gerarPedido(String matricula, Integer estagioID){
+        Estagio estagio =  estagioRepository.findById(estagioID).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estágio não encontrado"));
+
+        Usuario aluno = usuarioRepository.findByMatricula(matricula).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado"));
+
+        Cargo cargoAluno = cargoRepository.findCargoByNome("Aluno").orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Cargo aluno não encotrado"));
+
+        if(!aluno.getCargos().contains(cargoAluno)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido");
+        }
+        SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
+        InscricaoEstagio novoPedidoDeEstagio = new InscricaoEstagio();
+        novoPedidoDeEstagio.setEstagio(estagio);
+        novoPedidoDeEstagio.setSituacaoInscricao(pendente);
+        novoPedidoDeEstagio.setAluno(aluno);
+        return inscricaoEstagioRepository.save(novoPedidoDeEstagio);
     }
 }

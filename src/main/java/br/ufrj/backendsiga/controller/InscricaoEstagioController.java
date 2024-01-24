@@ -1,5 +1,6 @@
 package br.ufrj.backendsiga.controller;
 
+import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
 import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
 import br.ufrj.backendsiga.service.InscricaoEstagioService;
 import org.springframework.web.bind.annotation.*;
@@ -32,5 +33,11 @@ public class InscricaoEstagioController {
     @PutMapping(path = "/estagio/rejeitar/{id}")
     public InscricaoEstagio rejectPedido(@PathVariable Integer id) {
         return inscricaoEstagioService.rejectPedido(id);
+    }
+
+    @PostMapping(path = "/aluno/formulario")
+    public void postFomularioAluno(@RequestBody FormularioEstagioBodyDTO body){
+        inscricaoEstagioService.gerarPedido(body.getMatricula(), body.getEstagioId());
+
     }
 }
