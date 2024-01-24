@@ -1,4 +1,4 @@
-package br.ufrj.backendsiga.model.DTO;
+package br.ufrj.backendsiga.model.dto;
 
 import lombok.Data;
 
