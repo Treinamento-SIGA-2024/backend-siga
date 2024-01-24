@@ -1,5 +1,6 @@
 package br.ufrj.backendsiga.controller;
 
+import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
 import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
 import br.ufrj.backendsiga.service.InscricaoEstagioService;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class InscricaoEstagioController {
     }
 
     @GetMapping(path = "/estagio")
-    public List<InscricaoEstagio> listPendentes() {
+    public List<InscricaoEstagioPendentesDTO> listPendentes() {
         return inscricaoEstagioService.listPendentes();
     }
 
