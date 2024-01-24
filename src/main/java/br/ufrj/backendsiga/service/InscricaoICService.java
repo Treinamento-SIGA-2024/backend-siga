@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,16 @@ public class InscricaoICService {
         return false;
     }
 
+    public boolean verificaEntradaDuplicada(Optional<Usuario> aluno, Integer ic_id) {
+        List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+
+        for(InscricaoIC inscricao : inscricoes) {
+            Integer id = inscricao.getIniciacaoCientifica().getId();
+            if (Objects.equals(id, ic_id)) return true;
+        }
+        return false;
+    }
+
     public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id,
                                         Integer professor_id) {
 
@@ -78,6 +89,10 @@ public class InscricaoICService {
 
         if (isRemunerado && verificaRemuneracaoAluno(aluno)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário já possui uma IC remunerada.");
+        }
+
+        if(verificaEntradaDuplicada(aluno, ic_id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inscrito nessa IC");
         }
 
         SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo("000");
