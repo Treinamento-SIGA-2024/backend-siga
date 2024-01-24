@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin // novo na branch
 @RestController
 @RequestMapping("/inscricoes")
 public class InscricaoICController {
