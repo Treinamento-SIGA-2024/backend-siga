@@ -12,6 +12,6 @@ public class SituacaoInscricaoService {
         this.situacaoInscricaoRepository = situacaoInscricaoRepository;
     }
     public SituacaoInscricao findByCodigo(String codigo) {
-        return situacaoInscricaoRepository.findByCodigo(codigo);
+        return situacaoInscricaoRepository.findByCodigo(codigo).orElseThrow();
     }
 }
