@@ -9,6 +9,10 @@ import java.util.List;
 @Data
 @Entity(name = "situacao_criacao_ic")
 public class SituacaoCriacaoIC {
+    public final static String PENDENTE = "000";
+    public final static String ACEITA = "001";
+    public final static String RECUSADA = "002";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

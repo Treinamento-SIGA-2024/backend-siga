@@ -1,26 +1,34 @@
 package br.ufrj.backendsiga.controller;
 
+import br.ufrj.backendsiga.model.dto.IniciacaoCientificaCreateDTO;
+import br.ufrj.backendsiga.model.dto.IniciacaoCientificaNestedDTO;
+import br.ufrj.backendsiga.model.dto.TopicoDTO;
+import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
+import br.ufrj.backendsiga.model.entity.Topico;
+import br.ufrj.backendsiga.model.entity.Usuario;
+import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.service.IniciacaoCientificaService;
+import br.ufrj.backendsiga.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/ic")
-@RequiredArgsConstructor
 @CrossOrigin
+@RestController
+@RequestMapping("/iniciacao_cientifica")
+@RequiredArgsConstructor
 public class IniciacaoCientificaController {
 
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
     private final IniciacaoCientificaService iniciacaoCientificaService;
+    private final UsuarioService usuarioService;
 
     @GetMapping()
     public List<IniciacaoCientifica> findAllIniciacaoCientifica() {
@@ -32,8 +40,12 @@ public class IniciacaoCientificaController {
         return iniciacaoCientificaService.getIniciacaoCientificaById(Integer.parseInt(icId));
     }
 
-    @GetMapping("/professor/{matricula}")
-    public List<IniciacaoCientifica> listIniciacaoCientificaProfessor(@PathVariable String matricula) {
-        return iniciacaoCientificaService.listIniciacaoCientificaByProfessorMatricula(matricula);
+    @PostMapping("/{matriculaProfessorCriador}")
+    public IniciacaoCientificaNestedDTO createIniciacaoCientifica(@PathVariable String matriculaProfessorCriador, @RequestBody IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO) {
+        IniciacaoCientifica iniciacaoCientifica = iniciacaoCientificaService.createIniciacaoCientificaAndAddProfessorByMatricula(
+                IniciacaoCientificaMapper.INSTANCE.toEntity(iniciacaoCientificaCreateDTO),
+                matriculaProfessorCriador
+        );
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(iniciacaoCientifica);
     }
 }
