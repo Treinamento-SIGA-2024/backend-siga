@@ -1,7 +1,9 @@
 package br.ufrj.backendsiga.service;
 
+import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
 import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
 import br.ufrj.backendsiga.model.entity.*;
+import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.repository.*;
 import org.hibernate.mapping.Formula;
 import org.springframework.http.HttpStatus;
@@ -36,9 +38,10 @@ public class InscricaoEstagioService {
         return inscricaoEstagioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Inscrição de estágio não encontrada"));
     }
 
-    public List<InscricaoEstagio> listPendentes() {
+    public List<InscricaoEstagioPendentesDTO> listPendentes() {
          SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
-         return inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
+         List<InscricaoEstagio> inscricoesPendentes = inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
+         return inscricoesPendentes.stream().map(est -> InscricaoEstagioMapper.INSTANCE.toPendentesDTO(est)).toList();
     }
 
     public InscricaoEstagio approvePedido(Integer id) {
