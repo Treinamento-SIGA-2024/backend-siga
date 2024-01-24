@@ -64,27 +64,18 @@ public class InscricaoICService {
         return false;
     }
 
-    public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id,
-                                        Integer professor_id) {
+    public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id) {
 
         final String CARGO_ALUNO = "Aluno";
-        final String CARGO_PROFESSOR = "Professor";
         final String CODIGO_PADRAO = "000";
 
         List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
-        List<String> cargosProfessorId = verificaCargoUsuario(professor_id);
 
         if(!cargosAlunoId.contains(CARGO_ALUNO)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
         }
 
-        if(!cargosProfessorId.contains(CARGO_PROFESSOR)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
-        }
-
         Optional<Usuario> aluno = usuarioRepository.findById(aluno_id);
-
-        Optional<Usuario> professor = usuarioRepository.findById(professor_id);
 
         IniciacaoCientifica IC = iniciacaoCientificaRepository.findById(ic_id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "IC não encontrada."));
@@ -105,10 +96,28 @@ public class InscricaoICService {
 
         inscricaoIC.setIniciacaoCientifica(IC);
         inscricaoIC.setAluno(aluno.get());
-        inscricaoIC.setProfessor(professor.get());
         inscricaoIC.setSituacaoInscricao(situacao);
 
         return inscricaoICRepository.save(inscricaoIC);
+    }
+
+    public List<InscricaoIC> verInscricoesIC(Integer aluno_id){
+
+        final String CARGO_ALUNO = "Aluno";
+
+        Optional<Usuario> aluno = usuarioRepository.findById(aluno_id);
+
+        List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
+        if(!cargosAlunoId.contains(CARGO_ALUNO)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "O usuário não é um aluno");
+        }
+
+        List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+        if(inscricoes.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui uma IC");
+        }
+
+        return inscricoes;
     }
 
 

@@ -6,7 +6,9 @@ import br.ufrj.backendsiga.repository.UsuarioRepository;
 import br.ufrj.backendsiga.service.InscricaoICService;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+import java.util.List;
+
+@CrossOrigin // novo na branch
 @RestController
 @RequestMapping("/inscricoes")
 public class InscricaoICController {
@@ -16,11 +18,15 @@ public class InscricaoICController {
     }
 
 
-    @PostMapping("/IC/{ic_id}/aluno/{aluno_id}/professor/{professor_id}")
-    public InscricaoIC createInscricaoIC(@PathVariable Integer ic_id,
-                                         @PathVariable Integer aluno_id,
-                                         @PathVariable Integer professor_id) {
+    @PostMapping("/IC/{ic_id}/aluno/{aluno_id}")
+    public InscricaoIC createInscricaoIC(@PathVariable Integer ic_id, @PathVariable Integer aluno_id) {
 
-        return inscricaoICService.criarInscricaoIC(ic_id, aluno_id, professor_id);
+        return inscricaoICService.criarInscricaoIC(ic_id, aluno_id);
+    }
+
+
+    @GetMapping("/IC/aluno/{aluno_id}")
+    public List<InscricaoIC> verInscricoesIC(@PathVariable Integer aluno_id){
+        return inscricaoICService.verInscricoesIC(aluno_id);
     }
 }
