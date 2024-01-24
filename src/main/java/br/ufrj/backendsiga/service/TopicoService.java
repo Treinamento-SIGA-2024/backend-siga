@@ -12,10 +12,10 @@ import java.util.List;
 public class TopicoService {
     private final TopicoRepository topicoRepository;
 
-    List<Topico> getListTopicoById(List<Integer> ids) {
+    public List<Topico> getListTopicoById(List<Integer> ids) {
         return topicoRepository.findAllById(ids);
     }
-    List<Topico> getListTopico() {
+    public List<Topico> getListTopico() {
         return topicoRepository.findAll();
     }
 }
