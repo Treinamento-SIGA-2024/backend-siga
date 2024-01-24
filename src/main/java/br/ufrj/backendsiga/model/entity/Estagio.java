@@ -1,5 +1,6 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,6 +35,7 @@ public class Estagio {
     private String empresa;
 
     @OneToMany(mappedBy = "estagio")
+    @JsonManagedReference
     private List<InscricaoEstagio> inscricoesEstagio;
 
 }

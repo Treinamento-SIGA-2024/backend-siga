@@ -1,14 +1,15 @@
 package br.ufrj.backendsiga.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "usuario")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //TIRAR DEPOIS HEIN
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,33 +27,35 @@ public class Usuario {
     @Column(nullable = false, length = 40)
     private String senha;
 
-    @ManyToMany
-    @JoinTable(
-            name = "r_usuario_cargo",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "cargo_id")
-    )
+    @ManyToMany(mappedBy = "usuarios")
+    @JsonIgnoreProperties("usuarios")
     private List<Cargo> cargos;
 
     //Informações de aluno
     @OneToMany(mappedBy = "aluno")
+    @JsonManagedReference
     private List<InscricaoIC> inscricoesIC;
 
     @OneToMany(mappedBy = "aluno")
+    @JsonManagedReference
     private List<InscricaoEstagio> inscricoesEstagio;
 
     //Informações de coordenador
     @OneToMany(mappedBy = "coordenadorAvaliador")
+    @JsonManagedReference
     List<IniciacaoCientifica> iniciacoesCientificasAvaliadas;
 
     @OneToMany(mappedBy = "coordenadorAvaliador")
+    @JsonManagedReference
     List<InscricaoEstagio> inscricoesEstagioAvaliadas;
 
     //Informações de professor
     @ManyToMany(mappedBy = "professores")
+    @JsonIgnoreProperties("professores")
     private List<IniciacaoCientifica> iniciacoesCientificas;
 
-    @OneToMany(mappedBy = "professor")
+    @OneToMany(mappedBy = "professorAvaliador")
+    @JsonManagedReference
     private List<InscricaoIC> inscricoesICAvaliadas;
 
 }
