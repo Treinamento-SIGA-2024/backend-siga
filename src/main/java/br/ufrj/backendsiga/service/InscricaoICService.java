@@ -68,7 +68,7 @@ public class InscricaoICService {
         SituacaoInscricao situacaoNova = situacaoInscricaoRepository.findByCodigo(body.getCodigo()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Situação não encontrada."));
 
         inscricaoICAluno.setSituacaoInscricao(situacaoNova);
-        inscricaoICAluno.setProfessor(professorAvaliador);
+        inscricaoICAluno.setProfessorAvaliador(professorAvaliador);
         return inscricaoIcRepository.save(inscricaoICAluno);
     }
 }
