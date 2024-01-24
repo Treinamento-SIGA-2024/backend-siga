@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class EstagioCreateDTO {
+    private Integer id;
     private String cargo;
     private String empresa;
     private Double remuneracao;
