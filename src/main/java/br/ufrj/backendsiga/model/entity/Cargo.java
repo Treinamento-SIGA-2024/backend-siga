@@ -22,6 +22,7 @@ public class Cargo {
     @Column(name = "nome", unique = true, nullable = false, length = 40)
     private String nome;
 
+    
     @ManyToMany
     @JsonIgnoreProperties("cargos")
     @JoinTable(
