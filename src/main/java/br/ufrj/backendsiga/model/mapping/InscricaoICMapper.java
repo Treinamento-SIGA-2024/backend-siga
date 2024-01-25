@@ -12,4 +12,6 @@ public interface InscricaoICMapper {
 
     InscricaoICPendentesDTO toPendentesDTO(InscricaoIC inscricaoIC);
 
+    GetICDTO toICDTO(InscricaoIC inscricaoIC);
+
 }
