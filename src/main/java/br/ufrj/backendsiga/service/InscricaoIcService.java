@@ -1,6 +1,8 @@
 package br.ufrj.backendsiga.service;
 
+import br.ufrj.backendsiga.model.dto.GetICDTO;
 import br.ufrj.backendsiga.model.entity.*;
+import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.InscricaoICRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
@@ -62,7 +64,7 @@ public class InscricaoIcService {
         return false;
     }
 
-    public InscricaoIC criarInscricaoIC(Integer ic_id, Integer aluno_id) {
+    public void criarInscricaoIC(Integer ic_id, Integer aluno_id) {
 
         final String CARGO_ALUNO = "Aluno";
         final String CODIGO_PADRAO = "000";
@@ -88,18 +90,18 @@ public class InscricaoIcService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inscrito nessa IC");
         }
 
-        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
+        Optional<SituacaoInscricao> situacao = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
 
         InscricaoIC inscricaoIC = new InscricaoIC();
 
         inscricaoIC.setIniciacaoCientifica(IC);
         inscricaoIC.setAluno(aluno.get());
-        inscricaoIC.setSituacaoInscricao(situacao);
+        inscricaoIC.setSituacaoInscricao(situacao.get());
 
-        return inscricaoICRepository.save(inscricaoIC);
+        inscricaoICRepository.save(inscricaoIC);
     }
 
-    public List<InscricaoIC> verInscricoesIC(Integer aluno_id){
+    public List<GetICDTO> verInscricoesIC(Integer aluno_id){
 
         final String CARGO_ALUNO = "Aluno";
 
@@ -115,6 +117,6 @@ public class InscricaoIcService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui uma IC");
         }
 
-        return inscricoes;
+        return inscricoes.stream().map(inscricao -> InscricaoICMapper.INSTANCE.toICDTO(inscricao)).toList();
     }
 }
