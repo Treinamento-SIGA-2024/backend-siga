@@ -1,6 +1,7 @@
 package br.ufrj.backendsiga.service;
 import br.ufrj.backendsiga.model.entity.*;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
+import br.ufrj.backendsiga.repository.SituacaoCriacaoICRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,16 @@ public class IniciacaoCientificaService {
         }
 
         return optIc.get();
+    }
+
+    public List<IniciacaoCientifica> findAllBySituacaoCriacaoPendente(){
+        SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.PENDENTE);
+        return iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoPendente);
+    }
+
+    public List<IniciacaoCientifica> findAllBySituacaoCriacaoAceita(){
+        SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
+        return iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoPendente);
     }
 
     @Transactional
@@ -86,5 +97,51 @@ public class IniciacaoCientificaService {
         }
 
         return iniciacaoCientificaRepository.saveAndFlush(iniciacaoCientifica);
+    }
+
+    public IniciacaoCientifica approvePedido(Integer icId, String matriculaCoordenador) {
+        IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
+        Usuario coordenador = usuarioService.getUsuarioByMatriculaAndAssertCargoByNome(matriculaCoordenador, Cargo.COORDENADOR);
+
+        if(ic.getSituacaoCriacao().getCodigo().equals("001")) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Inscrição de estágio já aprovada"
+            );
+        } else if(ic.getSituacaoCriacao().getCodigo().equals("002")) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Inscrição de estágio já rejeitada"
+            );
+        }
+
+        SituacaoCriacaoIC situacaoAprovado = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
+        ic.setSituacaoCriacao(situacaoAprovado);
+        ic.setCoordenadorAvaliador(coordenador);
+
+        return iniciacaoCientificaRepository.save(ic);
+    }
+    
+    public IniciacaoCientifica rejectPedido(Integer icId, String matriculaCoordenador) {
+        IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
+        Usuario coordenador = usuarioService.getUsuarioByMatriculaAndAssertCargoByNome(matriculaCoordenador, Cargo.COORDENADOR);
+
+        if(ic.getSituacaoCriacao().getCodigo().equals("001")) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Inscrição de estágio já aprovada"
+            );
+        } else if(ic.getSituacaoCriacao().getCodigo().equals("002")) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Inscrição de estágio já rejeitada"
+            );
+        }
+
+        SituacaoCriacaoIC situacaoRecusada = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.RECUSADA);
+        ic.setSituacaoCriacao(situacaoRecusada);
+        ic.setCoordenadorAvaliador(coordenador);
+
+        return iniciacaoCientificaRepository.save(ic);
     }
 }
