@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/iniciacao_cientifica")
-@RequiredArgsConstructor
 public class IniciacaoCientificaController {
 
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;

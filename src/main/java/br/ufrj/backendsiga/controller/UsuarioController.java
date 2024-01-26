@@ -3,23 +3,21 @@ package br.ufrj.backendsiga.controller;
 import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 
 //apenas para fins de testes com usuarios
+@RequiredArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping("/{usuario_id}")
     public Usuario getUser(@PathVariable Integer usuario_id) {

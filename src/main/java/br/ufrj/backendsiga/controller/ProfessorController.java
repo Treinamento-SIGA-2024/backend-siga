@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/professor")
-@RequiredArgsConstructor
 public class ProfessorController {
     public final IniciacaoCientificaService iniciacaoCientificaService;
 
