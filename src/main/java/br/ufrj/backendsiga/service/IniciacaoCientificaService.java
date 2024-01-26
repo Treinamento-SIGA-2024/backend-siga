@@ -1,5 +1,9 @@
 package br.ufrj.backendsiga.service;
+import br.ufrj.backendsiga.model.dto.IniciacaoCientificaDTO;
+import br.ufrj.backendsiga.model.dto.IniciacaoCientificaNestedDTO;
 import br.ufrj.backendsiga.model.entity.*;
+import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
+import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.SituacaoCriacaoICRepository;
 import jakarta.transaction.Transactional;
@@ -21,6 +25,8 @@ public class IniciacaoCientificaService {
     private final CargoService cargoService;
     private final SituacaoCriacaoICService situacaoCriacaoService;
     private final TopicoService topicoService;
+    private final InscricaoICService inscricaoICService;
+
 
     public IniciacaoCientifica getIniciacaoCientificaById(Integer icId) {
         Optional<IniciacaoCientifica> optIc = iniciacaoCientificaRepository.findById(icId);
@@ -143,5 +149,13 @@ public class IniciacaoCientificaService {
         ic.setCoordenadorAvaliador(coordenador);
 
         return iniciacaoCientificaRepository.save(ic);
+    }
+
+    public IniciacaoCientificaNestedDTO getIniciacaoCientificaDTOById(Integer id) {
+        IniciacaoCientifica ic = getIniciacaoCientificaById(id);
+        List<InscricaoIC> ativas = inscricaoICService.getInscricoesICAtivas(id);
+        ic.setInscricoes(ativas);
+
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(ic);
     }
 }
