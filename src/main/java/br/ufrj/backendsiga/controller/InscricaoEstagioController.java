@@ -26,7 +26,8 @@ public class InscricaoEstagioController {
     }
     @GetMapping("/estagio/aluno/{aluno_id}")
     public List<getEstagioDTO> listAllByAluno(@PathVariable Integer aluno_id) {
-        return inscricaoEstagioService.findEstagioByAluno(aluno_id);
+        List<InscricaoEstagio> listaPedidos = inscricaoEstagioService.findEstagioByAluno(aluno_id);
+        return listaPedidos.stream().map(InscricaoEstagioMapper.INSTANCE::toEstagioDTO).toList();
     }
     @GetMapping(path = "/estagio/{id}")
     public InscricaoEstagioPendentesDTO findById(@PathVariable Integer id) {

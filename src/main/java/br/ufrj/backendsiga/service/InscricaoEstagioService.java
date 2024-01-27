@@ -1,7 +1,6 @@
 package br.ufrj.backendsiga.service;
 
 import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
-import br.ufrj.backendsiga.model.dto.getEstagioDTO;
 import br.ufrj.backendsiga.model.entity.*;
 import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.repository.*;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InscricaoEstagioService {
@@ -87,7 +85,7 @@ public class InscricaoEstagioService {
         return inscricaoEstagioRepository.save(novoPedidoDeEstagio);
     }
 
-    public List<getEstagioDTO> findEstagioByAluno(Integer aluno_id) {
+    public List<InscricaoEstagio> findEstagioByAluno(Integer aluno_id) {
         final String CARGO_ALUNO = "Aluno";
 
         Cargo cargoAluno = cargoRepository.findCargoByNome(CARGO_ALUNO)
@@ -106,6 +104,6 @@ public class InscricaoEstagioService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui estágio.");
         }
 
-        return inscricoes.stream().map(InscricaoEstagioMapper.INSTANCE::toEstagioDTO).toList();
+        return inscricoes;
     }
 }
