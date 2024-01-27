@@ -158,6 +158,7 @@ public class InscricaoICService {
         }
 
         List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+
         if(inscricoes.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui uma IC");
         }

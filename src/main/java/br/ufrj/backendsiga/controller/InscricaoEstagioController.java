@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.controller;
 
 import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
 import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
+import br.ufrj.backendsiga.model.dto.getEstagioDTO;
 import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
 import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.service.InscricaoEstagioService;
@@ -23,7 +24,10 @@ public class InscricaoEstagioController {
     public List<InscricaoEstagioPendentesDTO> listPendentes() {
         return inscricaoEstagioService.listPendentes();
     }
-
+    @GetMapping("/estagio/aluno/{aluno_id}")
+    public List<getEstagioDTO> listAllByAluno(@PathVariable Integer aluno_id) {
+        return inscricaoEstagioService.findEstagioByAluno(aluno_id);
+    }
     @GetMapping(path = "/estagio/{id}")
     public InscricaoEstagioPendentesDTO findById(@PathVariable Integer id) {
         InscricaoEstagio inscricao = inscricaoEstagioService.findById(id);
@@ -41,6 +45,5 @@ public class InscricaoEstagioController {
     @PostMapping(path = "/aluno/formulario")
     public void postFomularioAluno(@RequestBody FormularioEstagioBodyDTO body){
         inscricaoEstagioService.gerarPedido(body.getMatricula(), body.getEstagioId());
-
     }
 }

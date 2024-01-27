@@ -1,16 +1,16 @@
 package br.ufrj.backendsiga.service;
 
 import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
-import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
+import br.ufrj.backendsiga.model.dto.getEstagioDTO;
 import br.ufrj.backendsiga.model.entity.*;
 import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.repository.*;
-import org.hibernate.mapping.Formula;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InscricaoEstagioService {
@@ -85,5 +85,27 @@ public class InscricaoEstagioService {
         novoPedidoDeEstagio.setSituacaoInscricao(pendente);
         novoPedidoDeEstagio.setAluno(aluno);
         return inscricaoEstagioRepository.save(novoPedidoDeEstagio);
+    }
+
+    public List<getEstagioDTO> findEstagioByAluno(Integer aluno_id) {
+        final String CARGO_ALUNO = "Aluno";
+
+        Cargo cargoAluno = cargoRepository.findCargoByNome(CARGO_ALUNO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cargo não encontrado."));
+
+        Usuario aluno = usuarioRepository.findById(aluno_id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado."));
+
+        if(!aluno.getCargos().contains(cargoAluno)) {
+            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não é um aluno.");
+        }
+
+        List<InscricaoEstagio> inscricoes = aluno.getInscricoesEstagio();
+
+        if(inscricoes.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui estágio.");
+        }
+
+        return inscricoes.stream().map(InscricaoEstagioMapper.INSTANCE::toEstagioDTO).toList();
     }
 }
