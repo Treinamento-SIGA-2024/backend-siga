@@ -53,9 +53,8 @@ public class InscricaoICService {
 
 
         List<InscricaoIC> inscricoesPendentes = inscricaoICRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(icProfessor, situacaoPendente);
-        List<InscricaoICPendentesDTO> teste = inscricoesPendentes.stream().map(ic -> InscricaoICMapper.INSTANCE.toPendentesDTO(ic)).toList();
 
-        return inscricoesPendentes.stream().map(ic -> InscricaoICMapper.INSTANCE.toPendentesDTO(ic)).toList();
+        return inscricoesPendentes.stream().map(InscricaoICMapper.INSTANCE::toPendentesDTO).toList();
     }
 
     public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, AlterarSituacaoAlunoIcBodyDTO body){
@@ -162,6 +161,6 @@ public class InscricaoICService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui uma IC");
         }
 
-        return inscricoes.stream().map(inscricao -> InscricaoICMapper.INSTANCE.toICDTO(inscricao)).toList();
+        return inscricoes.stream().map(InscricaoICMapper.INSTANCE::toICDTO).toList();
     }
 }
