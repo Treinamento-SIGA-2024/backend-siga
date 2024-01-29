@@ -54,13 +54,5 @@ public class InscricaoICController {
     public String deletarInscricao(@PathVariable Integer inscricaoId){
         return inscricaoICService.cancelarInscricaoIC(inscricaoId);
     }
-
-    @PutMapping("/ic/{inscricaoId}/{matriculaProf}")
-    public InscricaoIC excluirAlunoIc(@PathVariable Integer inscricaoId, @PathVariable String matriculaProf){
-        return inscricaoICService.excluirAluno(inscricaoId, matriculaProf);
-    }
-
-
-
     
 }
