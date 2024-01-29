@@ -9,7 +9,6 @@ import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.InscricaoICRepository;
-import br.ufrj.backendsiga.repository.InscricaoICRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
 
@@ -46,9 +45,8 @@ public class InscricaoICService {
 
 
         List<InscricaoIC> inscricoesPendentes = inscricaoICRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(icProfessor, situacaoPendente);
-        List<InscricaoICPendentesDTO> teste = inscricoesPendentes.stream().map(ic -> InscricaoICMapper.INSTANCE.toPendentesDTO(ic)).toList();
 
-        return inscricoesPendentes.stream().map(ic -> InscricaoICMapper.INSTANCE.toPendentesDTO(ic)).toList();
+        return inscricoesPendentes.stream().map(InscricaoICMapper.INSTANCE::toPendentesDTO).toList();
     }
 
     public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, AlterarSituacaoAlunoIcBodyDTO body){
@@ -68,15 +66,15 @@ public class InscricaoICService {
         return inscricaoICRepository.save(inscricaoICAluno);
     }
 
-     public List<String> verificaCargoUsuario(Integer usuario_id) {
+    public List<String> verificaCargoUsuario(Integer usuario_id) {
         Usuario usuario = usuarioRepository.findById(usuario_id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
 
         List<Cargo> cargos = usuario.getCargos();
 
         return cargos.stream()
-                    .map(Cargo::getNome)
-                    .collect(Collectors.toList());
+                .map(Cargo::getNome)
+                .collect(Collectors.toList());
     }
 
     public boolean verificaRemuneracaoAluno(Optional<Usuario> aluno) {
@@ -150,11 +148,12 @@ public class InscricaoICService {
         }
 
         List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+
         if(inscricoes.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui uma IC");
         }
 
-        return inscricoes.stream().map(inscricao -> InscricaoICMapper.INSTANCE.toICDTO(inscricao)).toList();
+        return inscricoes.stream().map(InscricaoICMapper.INSTANCE::toICDTO).toList();
     }
 
     public List<InscricaoIC> getInscricoesICAtivas(Integer icId) {
