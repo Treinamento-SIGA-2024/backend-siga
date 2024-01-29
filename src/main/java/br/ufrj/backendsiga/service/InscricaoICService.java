@@ -175,3 +175,4 @@ public class InscricaoICService {
         inscricaoICRepository.save(inscricaoIC);
         return "Pedido de inscrição de IC cancelado com sucesso";
 }
+}
