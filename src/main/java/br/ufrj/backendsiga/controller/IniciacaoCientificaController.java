@@ -40,6 +40,12 @@ public class IniciacaoCientificaController {
         return iniciacaoCientificaService.getIniciacaoCientificaById(Integer.parseInt(icId));
     }
 
+    @GetMapping("/{icId}/ativos")
+    public IniciacaoCientificaNestedDTO getIniciacaoCientificaAtivosById(@PathVariable String icId) {
+        IniciacaoCientifica icInscricoesAtivas = iniciacaoCientificaService.getIniciacaoCientificaAtivosById(Integer.parseInt(icId));
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(icInscricoesAtivas);
+    }
+
     @GetMapping("/pendentes")
     public List<IniciacaoCientifica> findAllIniciacaoCientificaPendente() {
         return iniciacaoCientificaService.findAllBySituacaoCriacaoPendente();

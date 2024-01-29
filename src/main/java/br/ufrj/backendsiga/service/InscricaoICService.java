@@ -156,4 +156,14 @@ public class InscricaoICService {
 
         return inscricoes.stream().map(inscricao -> InscricaoICMapper.INSTANCE.toICDTO(inscricao)).toList();
     }
+
+    public List<InscricaoIC> getInscricoesICAtivas(Integer icId) {
+        IniciacaoCientifica ic = iniciacaoCientificaRepository.findById(icId)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Iniciação Científica não encontrada!"));
+
+        SituacaoInscricao ativas = situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.ATIVO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma inscrição ativa para essa IC!"));
+
+        return inscricaoICRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(ic, ativas);
+    }
 }
