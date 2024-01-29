@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.controller;
 
 import br.ufrj.backendsiga.model.dto.IniciacaoCientificaCreateDTO;
 import br.ufrj.backendsiga.model.dto.IniciacaoCientificaNestedDTO;
+import br.ufrj.backendsiga.model.dto.IniciacaoCientificaProfessorAtivaDTO;
 import br.ufrj.backendsiga.model.dto.TopicoDTO;
 import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/iniciacao_cientifica")
-@RequiredArgsConstructor
 public class IniciacaoCientificaController {
 
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
@@ -38,6 +39,18 @@ public class IniciacaoCientificaController {
     @GetMapping("/{icId}")
     public IniciacaoCientifica getIniciacaoCientificaById(@PathVariable String icId) {
         return iniciacaoCientificaService.getIniciacaoCientificaById(Integer.parseInt(icId));
+    }
+
+    @GetMapping("/{icId}/ativos")
+    public IniciacaoCientificaNestedDTO getIniciacaoCientificaAtivosById(@PathVariable String icId) {
+        IniciacaoCientifica icInscricoesAtivas = iniciacaoCientificaService.getIniciacaoCientificaAtivosById(Integer.parseInt(icId));
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(icInscricoesAtivas);
+    }
+
+    @GetMapping("/ativas/professor/{matricula}")
+    public List<IniciacaoCientificaProfessorAtivaDTO> getIniciacaoCientificaAtivasByProfessor(@PathVariable String matricula){
+        List<IniciacaoCientifica> icsAtivas = iniciacaoCientificaService.findAllIniciacaoCientificaAceitasByProfessor(matricula);
+        return icsAtivas.stream().map(ic->IniciacaoCientificaMapper.INSTANCE.toAtivaDTO(ic)).toList();
     }
 
     @GetMapping("/pendentes")

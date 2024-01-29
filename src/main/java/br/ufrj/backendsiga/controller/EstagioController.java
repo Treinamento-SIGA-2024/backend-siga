@@ -3,19 +3,18 @@ package br.ufrj.backendsiga.controller;
 import br.ufrj.backendsiga.model.dto.EstagioCreateDTO;
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.service.EstagioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RequiredArgsConstructor
 @CrossOrigin
+@RestController
 @RequestMapping("/estagio")
 public class EstagioController {
     private final EstagioService estagioService;
 
-    public EstagioController(EstagioService estagioService) {
-        this.estagioService = estagioService;
-    }
     @GetMapping()
     public List<Estagio> listAll(){
         return estagioService.listAll();

@@ -6,19 +6,17 @@ import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
 import br.ufrj.backendsiga.service.InscricaoICService;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@RequiredArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/inscricoes")
-@CrossOrigin
 public class InscricaoICController {
-
     private final InscricaoICService inscricaoICService;
-    public InscricaoICController(InscricaoICService inscricaoICService) {
-        this.inscricaoICService = inscricaoICService;
-    }
 
     @PostMapping("/IC/{ic_id}/aluno/{aluno_id}")
     public void createInscricaoIC(@PathVariable Integer ic_id,
@@ -50,6 +48,11 @@ public class InscricaoICController {
     @PutMapping("/ic/{inscricaoId}")
     public void alterarSituacaoInscricaoAluno(@PathVariable Integer inscricaoId, @RequestBody AlterarSituacaoAlunoIcBodyDTO bodyAlterar){
         inscricaoICService.alterarInscricaoAluno(inscricaoId, bodyAlterar);
+    }
+
+    @DeleteMapping("/ic/{inscricaoId}")
+    public String deletarInscricao(@PathVariable Integer inscricaoId){
+        return inscricaoICService.cancelarInscricaoIC(inscricaoId);
     }
 
     @PutMapping("/ic/{inscricaoId}/{matriculaProf}")

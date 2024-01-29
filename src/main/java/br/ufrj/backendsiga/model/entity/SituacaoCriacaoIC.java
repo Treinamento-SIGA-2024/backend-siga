@@ -7,7 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Entity(name = "situacao_criacao_ic")
+@Entity
+@Table(name = "situacao_criacao_ic")
 public class SituacaoCriacaoIC {
     public final static String PENDENTE = "000";
     public final static String ACEITA = "001";
