@@ -199,13 +199,10 @@ public class InscricaoICService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Aluno já foi expulso");
         }
 
-        if(!ic.getInscricoes().contains(alunoInscricaoIC)){
+        if(!ic.getInscricoes().contains(alunoInscricaoIC) || !ic.getProfessores().contains(professorIC)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
         }
 
-        if(!ic.getProfessores().contains(professorIC)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
-        }
 
         Optional<SituacaoInscricao> situacaoNova = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
 
