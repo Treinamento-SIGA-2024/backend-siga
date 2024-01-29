@@ -9,7 +9,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Entity(name = "iniciacao_cientifica")
+@Entity
+@Table(name = "iniciacao_cientifica")
 public class IniciacaoCientifica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

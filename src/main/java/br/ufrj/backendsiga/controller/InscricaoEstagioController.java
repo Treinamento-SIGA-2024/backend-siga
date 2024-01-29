@@ -5,19 +5,17 @@ import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
 import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
 import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.service.InscricaoEstagioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RequiredArgsConstructor
 @CrossOrigin
+@RestController
 @RequestMapping("/inscricoes")
 public class InscricaoEstagioController {
     private final InscricaoEstagioService inscricaoEstagioService;
-
-    public InscricaoEstagioController(InscricaoEstagioService inscricaoEstagioService) {
-        this.inscricaoEstagioService = inscricaoEstagioService;
-    }
 
     @GetMapping(path = "/estagio")
     public List<InscricaoEstagioPendentesDTO> listPendentes() {
