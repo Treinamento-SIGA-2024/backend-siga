@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.controller;
 
 import br.ufrj.backendsiga.model.dto.IniciacaoCientificaCreateDTO;
 import br.ufrj.backendsiga.model.dto.IniciacaoCientificaNestedDTO;
+import br.ufrj.backendsiga.model.dto.IniciacaoCientificaProfessorAtivaDTO;
 import br.ufrj.backendsiga.model.dto.TopicoDTO;
 import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
@@ -44,6 +45,12 @@ public class IniciacaoCientificaController {
     public IniciacaoCientificaNestedDTO getIniciacaoCientificaAtivosById(@PathVariable String icId) {
         IniciacaoCientifica icInscricoesAtivas = iniciacaoCientificaService.getIniciacaoCientificaAtivosById(Integer.parseInt(icId));
         return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(icInscricoesAtivas);
+    }
+
+    @GetMapping("/ativas/professor/{matricula}")
+    public List<IniciacaoCientificaProfessorAtivaDTO> getIniciacaoCientificaAtivasByProfessor(@PathVariable String matricula){
+        List<IniciacaoCientifica> icsAtivas = iniciacaoCientificaService.findAllIniciacaoCientificaAceitasByProfessor(matricula);
+        return icsAtivas.stream().map(ic->IniciacaoCientificaMapper.INSTANCE.toAtivaDTO(ic)).toList();
     }
 
     @GetMapping("/pendentes")
