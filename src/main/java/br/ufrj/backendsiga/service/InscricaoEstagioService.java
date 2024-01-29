@@ -37,9 +37,9 @@ public class InscricaoEstagioService {
     }
 
     public List<InscricaoEstagioPendentesDTO> listPendentes() {
-         SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
-         List<InscricaoEstagio> inscricoesPendentes = inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
-         return inscricoesPendentes.stream().map(est -> InscricaoEstagioMapper.INSTANCE.toPendentesDTO(est)).toList();
+        SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
+        List<InscricaoEstagio> inscricoesPendentes = inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
+        return inscricoesPendentes.stream().map(InscricaoEstagioMapper.INSTANCE::toPendentesDTO).toList();
     }
 
     public InscricaoEstagio approvePedido(Integer id) {
