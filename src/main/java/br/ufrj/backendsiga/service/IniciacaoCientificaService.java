@@ -166,6 +166,16 @@ public class IniciacaoCientificaService {
         SituacaoCriacaoIC situacaoAceita = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
 
         List<IniciacaoCientifica> icsAtivasDoProfessor = iniciacaoCientificaRepository.findAllByProfessoresAndSituacaoCriacao(professor, situacaoAceita);
+
+        icsAtivasDoProfessor.stream().forEach(ic->{
+            List<InscricaoIC> inscricoesAtivas = new ArrayList<InscricaoIC>();
+            ic.getInscricoes().stream().forEach(ins->{
+                if(ins.getSituacaoInscricao().getCodigo().equals(SituacaoInscricao.ATIVO)){
+                    inscricoesAtivas.add(ins);
+                }
+            });
+            ic.setInscricoes(inscricoesAtivas);
+        });
         
         return icsAtivasDoProfessor;
     }
