@@ -12,6 +12,7 @@ import br.ufrj.backendsiga.repository.InscricaoICRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,21 +21,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class InscricaoICService {
     private final UsuarioRepository usuarioRepository;
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
     private final InscricaoICRepository inscricaoICRepository;
     private final SituacaoInscricaoRepository situacaoInscricaoRepository;
-
-    public InscricaoICService(UsuarioRepository usuarioRepository,
-            IniciacaoCientificaRepository iniciacaoCientificaRepository, 
-            InscricaoICRepository inscricaoICRepository,
-            SituacaoInscricaoRepository situacaoInscricaoRepository) {
-        this.iniciacaoCientificaRepository = iniciacaoCientificaRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.inscricaoICRepository = inscricaoICRepository;
-        this.situacaoInscricaoRepository = situacaoInscricaoRepository;        
-    }
 
     public List<InscricaoICPendentesDTO> findInscricoesICProfessor(String matricula, Integer icId){
         Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).
@@ -162,5 +154,15 @@ public class InscricaoICService {
         }
 
         return inscricoes.stream().map(InscricaoICMapper.INSTANCE::toICDTO).toList();
+    }
+
+    public List<InscricaoIC> getInscricoesICAtivas(Integer icId) {
+        IniciacaoCientifica ic = iniciacaoCientificaRepository.findById(icId)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Iniciação Científica não encontrada!"));
+
+        SituacaoInscricao ativas = situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.ATIVO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma inscrição ativa para essa IC!"));
+
+        return inscricaoICRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(ic, ativas);
     }
 }

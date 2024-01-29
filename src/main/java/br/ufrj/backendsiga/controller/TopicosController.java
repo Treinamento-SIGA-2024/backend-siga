@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/topicos")
-@RequiredArgsConstructor
 public class TopicosController {
     private final TopicoService topicoService;
+    private final static TopicoMapper mapper = TopicoMapper.INSTANCE;
 
     @GetMapping()
     public List<TopicoDTO> getTopicos() {
         return topicoService.getListTopico().stream()
-                .map(TopicoMapper.INSTANCE::toDTO)
-                .toList();
+                .map(mapper::toDTO).toList();
     }
 }

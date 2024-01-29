@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/iniciacao_cientifica")
-@RequiredArgsConstructor
 public class IniciacaoCientificaController {
 
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
@@ -38,6 +38,12 @@ public class IniciacaoCientificaController {
     @GetMapping("/{icId}")
     public IniciacaoCientifica getIniciacaoCientificaById(@PathVariable String icId) {
         return iniciacaoCientificaService.getIniciacaoCientificaById(Integer.parseInt(icId));
+    }
+
+    @GetMapping("/{icId}/ativos")
+    public IniciacaoCientificaNestedDTO getIniciacaoCientificaAtivosById(@PathVariable String icId) {
+        IniciacaoCientifica icInscricoesAtivas = iniciacaoCientificaService.getIniciacaoCientificaAtivosById(Integer.parseInt(icId));
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(icInscricoesAtivas);
     }
 
     @GetMapping("/pendentes")
