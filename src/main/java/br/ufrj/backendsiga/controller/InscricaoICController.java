@@ -56,8 +56,8 @@ public class InscricaoICController {
     }
 
     @PutMapping("/ic/{inscricaoId}/{matriculaProf}")
-    public InscricaoIC excluirAlunoIc(@PathVariable Integer inscricaoId, @PathVariable String matriculaProf, @RequestBody AlterarSituacaoAlunoIcBodyDTO alterarSituacaoAlunoIcBodyDTO){
-        return inscricaoICService.excluirAluno(inscricaoId, matriculaProf, alterarSituacaoAlunoIcBodyDTO);
+    public InscricaoIC excluirAlunoIc(@PathVariable Integer inscricaoId, @PathVariable String matriculaProf){
+        return inscricaoICService.excluirAluno(inscricaoId, matriculaProf);
     }
 
 

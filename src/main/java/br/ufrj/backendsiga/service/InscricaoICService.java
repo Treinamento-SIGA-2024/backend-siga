@@ -177,7 +177,7 @@ public class InscricaoICService {
         return "Pedido de inscrição de IC cancelado com sucesso";
 }
 
-    public InscricaoIC excluirAluno(Integer inscricaoId, String matriculaProf , AlterarSituacaoAlunoIcBodyDTO alterarSituacaoAlunoIcBodyDTO) {
+    public InscricaoIC excluirAluno(Integer inscricaoId, String matriculaProf) {
 
         final String CODIGO_PADRAO = "003";
 
@@ -187,19 +187,23 @@ public class InscricaoICService {
         Usuario professorIC = usuarioRepository.findUsuarioByMatricula(matriculaProf)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Instância de Professor não encontrada"));
 
-        Usuario alunoIC = usuarioRepository.findUsuarioByMatricula(alterarSituacaoAlunoIcBodyDTO.getMatricula())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Aluno não encontrado"));
-
         IniciacaoCientifica ic = iniciacaoCientificaRepository
                 .findById(alunoInscricaoIC.getIniciacaoCientifica().getId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Não foi possível encontrar a IC desejada"));
 
-        if(alterarSituacaoAlunoIcBodyDTO.getCodigo().equals(CODIGO_PADRAO)){
+        SituacaoInscricao situacaoAntiga = situacaoInscricaoRepository.findByCodigo(alunoInscricaoIC.getSituacaoInscricao().getCodigo()).get();
+
+
+        if(situacaoAntiga.getCodigo().equals(CODIGO_PADRAO)){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Aluno já foi expulso");
         }
 
-        if(!ic.getProfessores().contains(professorIC) || !ic.getInscricoes().contains(alunoInscricaoIC)){
+        if(!ic.getInscricoes().contains(alunoInscricaoIC)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
+        }
+
+        if(!ic.getProfessores().contains(professorIC)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
         }
 
