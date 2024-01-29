@@ -49,5 +49,10 @@ public class InscricaoICController {
     public void alterarSituacaoInscricaoAluno(@PathVariable Integer inscricaoId, @RequestBody AlterarSituacaoAlunoIcBodyDTO bodyAlterar){
         inscricaoICService.alterarInscricaoAluno(inscricaoId, bodyAlterar);
     }
+
+    @DeleteMapping("/ic/{inscricaoId}")
+    public String deletarInscricao(@PathVariable Integer inscricaoId){
+        return inscricaoICService.cancelarInscricaoIC(inscricaoId);
+    }
     
 }
