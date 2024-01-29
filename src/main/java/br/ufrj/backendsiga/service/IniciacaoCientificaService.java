@@ -151,11 +151,11 @@ public class IniciacaoCientificaService {
         return iniciacaoCientificaRepository.save(ic);
     }
 
-    public IniciacaoCientificaNestedDTO getIniciacaoCientificaDTOById(Integer id) {
+    public IniciacaoCientifica getIniciacaoCientificaAtivosById(Integer id) {
         IniciacaoCientifica ic = getIniciacaoCientificaById(id);
         List<InscricaoIC> ativas = inscricaoICService.getInscricoesICAtivas(id);
         ic.setInscricoes(ativas);
 
-        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(ic);
+        return ic;
     }
 }

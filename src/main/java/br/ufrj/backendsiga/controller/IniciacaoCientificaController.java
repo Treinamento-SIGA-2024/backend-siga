@@ -42,7 +42,8 @@ public class IniciacaoCientificaController {
 
     @GetMapping("/{icId}/ativos")
     public IniciacaoCientificaNestedDTO getIniciacaoCientificaAtivosById(@PathVariable String icId) {
-        return iniciacaoCientificaService.getIniciacaoCientificaDTOById(Integer.parseInt(icId));
+        IniciacaoCientifica icInscricoesAtivas = iniciacaoCientificaService.getIniciacaoCientificaAtivosById(Integer.parseInt(icId));
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(icInscricoesAtivas);
     }
 
     @GetMapping("/pendentes")
