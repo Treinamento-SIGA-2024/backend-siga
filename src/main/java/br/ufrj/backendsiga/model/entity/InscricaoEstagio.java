@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity(name = "inscricao_estagio")
+@Entity
+@Table(name = "inscricao_estagio")
 public class InscricaoEstagio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

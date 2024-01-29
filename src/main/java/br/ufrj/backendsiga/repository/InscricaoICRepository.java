@@ -15,5 +15,4 @@ public interface InscricaoICRepository extends JpaRepository<InscricaoIC, Intege
 
   List<InscricaoIC> findAllByIniciacaoCientificaAndSituacaoInscricao(IniciacaoCientifica iniciacaoCientifica, SituacaoInscricao situacaoInscricao);
 
-
 }

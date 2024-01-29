@@ -3,6 +3,7 @@ package br.ufrj.backendsiga.service;
 import br.ufrj.backendsiga.model.dto.EstagioCreateDTO;
 import br.ufrj.backendsiga.model.entity.Estagio;
 import br.ufrj.backendsiga.repository.EstagioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,12 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EstagioService {
     private final EstagioRepository estagioRepository;
-
-    public EstagioService(EstagioRepository estagioRepository) {
-        this.estagioRepository = estagioRepository;
-    }
 
     public List<Estagio> listAll() {
         return estagioRepository.findAll();
