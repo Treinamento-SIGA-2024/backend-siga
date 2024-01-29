@@ -12,4 +12,6 @@ public interface IniciacaoCientificaMapper {
 
     IniciacaoCientificaNestedDTO toNestedDTO(IniciacaoCientifica iniciacaoCientifica);
     IniciacaoCientifica toEntity(IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO);
+
+    VisualizarICsProfessorDTO toVisualizarICsProfessorDTO(IniciacaoCientifica iniciacaoCientifica);
 }
