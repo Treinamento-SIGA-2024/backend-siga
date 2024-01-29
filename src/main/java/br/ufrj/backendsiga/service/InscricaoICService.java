@@ -9,7 +9,6 @@ import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.InscricaoICRepository;
-import br.ufrj.backendsiga.repository.InscricaoICRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
 
@@ -76,15 +75,15 @@ public class InscricaoICService {
         return inscricaoICRepository.save(inscricaoICAluno);
     }
 
-     public List<String> verificaCargoUsuario(Integer usuario_id) {
+    public List<String> verificaCargoUsuario(Integer usuario_id) {
         Usuario usuario = usuarioRepository.findById(usuario_id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
 
         List<Cargo> cargos = usuario.getCargos();
 
         return cargos.stream()
-                    .map(Cargo::getNome)
-                    .collect(Collectors.toList());
+                .map(Cargo::getNome)
+                .collect(Collectors.toList());
     }
 
     public boolean verificaRemuneracaoAluno(Optional<Usuario> aluno) {
