@@ -15,6 +15,7 @@ import br.ufrj.backendsiga.repository.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -164,4 +165,40 @@ public class InscricaoICService {
 
         return inscricoes.stream().map(inscricao -> InscricaoICMapper.INSTANCE.toICDTO(inscricao)).toList();
     }
+
+    public InscricaoIC excluirAluno(Integer inscricaoId, String matriculaProf , AlterarSituacaoAlunoIcBodyDTO alterarSituacaoAlunoIcBodyDTO) {
+
+        final String CODIGO_PADRAO = "003";
+
+        InscricaoIC alunoInscricaoIC = inscricaoICRepository.findById(inscricaoId).
+                orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição de IC do aluno não encontrada"));
+
+        Usuario professorIC = usuarioRepository.findUsuarioByMatricula(matriculaProf)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Instância de Professor não encontrada"));
+
+        Usuario alunoIC = usuarioRepository.findUsuarioByMatricula(alterarSituacaoAlunoIcBodyDTO.getMatricula())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Aluno não encontrado"));
+
+        IniciacaoCientifica ic = iniciacaoCientificaRepository
+                .findById(alunoInscricaoIC.getIniciacaoCientifica().getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Não foi possível encontrar a IC desejada"));
+
+        if(alterarSituacaoAlunoIcBodyDTO.getCodigo().equals(CODIGO_PADRAO)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Aluno já foi expulso");
+        }
+
+        if(!ic.getProfessores().contains(professorIC) || !ic.getInscricoes().contains(alunoInscricaoIC)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
+        }
+
+        Optional<SituacaoInscricao> situacaoNova = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
+
+        alunoInscricaoIC.setSituacaoInscricao(situacaoNova.get());
+        return inscricaoICRepository.save(alunoInscricaoIC);
+
+    }
+
+
+
 }
