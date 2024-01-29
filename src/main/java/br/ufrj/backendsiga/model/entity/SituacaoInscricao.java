@@ -14,6 +14,7 @@ public class SituacaoInscricao {
     public final static String ATIVO = "001";
     public final static String RECUSADO = "002";
     public final static String EXPULSO = "003";
+    public final static String CANCELADO = "004";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
