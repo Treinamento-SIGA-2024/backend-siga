@@ -9,7 +9,6 @@ import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.repository.InscricaoICRepository;
-import br.ufrj.backendsiga.repository.InscricaoICRepository;
 import br.ufrj.backendsiga.repository.SituacaoInscricaoRepository;
 import br.ufrj.backendsiga.repository.UsuarioRepository;
 
@@ -46,7 +45,6 @@ public class InscricaoICService {
 
 
         List<InscricaoIC> inscricoesPendentes = inscricaoICRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(icProfessor, situacaoPendente);
-        List<InscricaoICPendentesDTO> teste = inscricoesPendentes.stream().map(InscricaoICMapper.INSTANCE::toPendentesDTO).toList();
 
         return inscricoesPendentes.stream().map(InscricaoICMapper.INSTANCE::toPendentesDTO).toList();
     }
@@ -157,6 +155,16 @@ public class InscricaoICService {
         return inscricoes.stream().map(InscricaoICMapper.INSTANCE::toICDTO).toList();
     }
 
+    public List<InscricaoIC> getInscricoesICAtivas(Integer icId) {
+        IniciacaoCientifica ic = iniciacaoCientificaRepository.findById(icId)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Iniciação Científica não encontrada!"));
+
+        SituacaoInscricao ativas = situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.ATIVO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma inscrição ativa para essa IC!"));
+
+        return inscricaoICRepository.findAllByIniciacaoCientificaAndSituacaoInscricao(ic, ativas);
+    }
+
     public String cancelarInscricaoIC(Integer inscricaoId) {
         InscricaoIC inscricaoIC = inscricaoICRepository.findById(inscricaoId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição de IC não encontrada"));
         SituacaoInscricao cancelado = situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.CANCELADO).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Situaçao de IC inválida"));
@@ -166,5 +174,4 @@ public class InscricaoICService {
         inscricaoIC.setSituacaoInscricao(cancelado);
         inscricaoICRepository.save(inscricaoIC);
         return "Pedido de inscrição de IC cancelado com sucesso";
-    }
 }

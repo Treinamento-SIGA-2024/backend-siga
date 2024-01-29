@@ -1,5 +1,6 @@
 package br.ufrj.backendsiga.model.mapping;
 
+import br.ufrj.backendsiga.model.dto.getEstagioDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,5 +12,7 @@ public interface InscricaoEstagioMapper {
     InscricaoEstagioMapper INSTANCE = Mappers.getMapper(InscricaoEstagioMapper.class);
     
     InscricaoEstagioPendentesDTO toPendentesDTO(InscricaoEstagio inscricaoEstagio);
+
+    getEstagioDTO toEstagioDTO(InscricaoEstagio inscricaoEstagio);
 
 }

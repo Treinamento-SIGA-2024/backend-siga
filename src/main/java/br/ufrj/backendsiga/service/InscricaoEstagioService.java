@@ -1,13 +1,9 @@
 package br.ufrj.backendsiga.service;
 
 import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
-import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
 import br.ufrj.backendsiga.model.entity.*;
 import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.repository.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Formula;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,22 +11,35 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class InscricaoEstagioService {
     private final InscricaoEstagioRepository inscricaoEstagioRepository;
     private final SituacaoInscricaoService situacaoInscricaoService;
+
     private final EstagioRepository estagioRepository;
+
     private final UsuarioRepository usuarioRepository;
     private final CargoRepository cargoRepository;
+
+    public InscricaoEstagioService(InscricaoEstagioRepository inscricaoEstagioRepository,
+                                   SituacaoInscricaoService situacaoInscricaoService,
+                                   EstagioRepository estagioRepository,
+                                   UsuarioRepository usuarioRepository,
+                                   CargoRepository cargoRepository) {
+        this.inscricaoEstagioRepository = inscricaoEstagioRepository;
+        this.situacaoInscricaoService = situacaoInscricaoService;
+        this.estagioRepository = estagioRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.cargoRepository = cargoRepository;
+    }
 
     public InscricaoEstagio findById(Integer id) {
         return inscricaoEstagioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Inscrição de estágio não encontrada"));
     }
 
     public List<InscricaoEstagioPendentesDTO> listPendentes() {
-         SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
-         List<InscricaoEstagio> inscricoesPendentes = inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
-         return inscricoesPendentes.stream().map(est -> InscricaoEstagioMapper.INSTANCE.toPendentesDTO(est)).toList();
+        SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
+        List<InscricaoEstagio> inscricoesPendentes = inscricaoEstagioRepository.findAllBySituacaoInscricao(pendente);
+        return inscricoesPendentes.stream().map(InscricaoEstagioMapper.INSTANCE::toPendentesDTO).toList();
     }
 
     public InscricaoEstagio approvePedido(Integer id) {
@@ -74,5 +83,27 @@ public class InscricaoEstagioService {
         novoPedidoDeEstagio.setSituacaoInscricao(pendente);
         novoPedidoDeEstagio.setAluno(aluno);
         return inscricaoEstagioRepository.save(novoPedidoDeEstagio);
+    }
+
+    public List<InscricaoEstagio> findEstagioByAluno(Integer aluno_id) {
+        final String CARGO_ALUNO = "Aluno";
+
+        Cargo cargoAluno = cargoRepository.findCargoByNome(CARGO_ALUNO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cargo não encontrado."));
+
+        Usuario aluno = usuarioRepository.findById(aluno_id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado."));
+
+        if(!aluno.getCargos().contains(cargoAluno)) {
+            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não é um aluno.");
+        }
+
+        List<InscricaoEstagio> inscricoes = aluno.getInscricoesEstagio();
+
+        if(inscricoes.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O aluno não possui estágio.");
+        }
+
+        return inscricoes;
     }
 }
