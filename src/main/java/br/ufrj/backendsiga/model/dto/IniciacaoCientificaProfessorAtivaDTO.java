@@ -8,6 +8,7 @@ import lombok.Data;
 public class IniciacaoCientificaProfessorAtivaDTO {
   private Integer id;
   private String nome;
+  private String descricao;
   private Set<InscricaoICDTO> inscricoes;
   private Set<UsuarioDTO> professores;
 }
