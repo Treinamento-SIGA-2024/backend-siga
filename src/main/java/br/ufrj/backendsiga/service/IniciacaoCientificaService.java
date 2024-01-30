@@ -179,4 +179,9 @@ public class IniciacaoCientificaService {
         
         return icsAtivasDoProfessor;
     }
+
+    public void addProfessorToIc (Integer icId, Usuario professor) {
+        IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
+        System.out.println(ic);
+    }
 }

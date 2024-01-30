@@ -1,20 +1,19 @@
 package br.ufrj.backendsiga.controller;
 
-import br.ufrj.backendsiga.model.dto.IniciacaoCientificaCreateDTO;
-import br.ufrj.backendsiga.model.dto.IniciacaoCientificaNestedDTO;
-import br.ufrj.backendsiga.model.dto.IniciacaoCientificaProfessorAtivaDTO;
-import br.ufrj.backendsiga.model.dto.TopicoDTO;
+import br.ufrj.backendsiga.model.dto.*;
 import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
 import br.ufrj.backendsiga.model.entity.Topico;
 import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
+import br.ufrj.backendsiga.model.mapping.UsuarioMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.service.IniciacaoCientificaService;
 import br.ufrj.backendsiga.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -79,5 +78,14 @@ public class IniciacaoCientificaController {
     @PutMapping("/{matriculaCoordenador}/rejeitar/{icId}")
     public IniciacaoCientifica rejectPedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
         return iniciacaoCientificaService.rejectPedido(icId, matriculaCoordenador);
+    }
+
+    @PutMapping("/{icId}/vincular")
+    public String vinculateProfessorIC(@PathVariable Integer icId, @RequestBody UsuarioDTO professor) {
+        System.out.println("entrei aqui");
+        Usuario user = usuarioService.getUsuarioByMatricula(professor.getMatricula());
+        iniciacaoCientificaService.addProfessorToIc(icId, user);
+        System.out.println(user);
+        return "OK";
     }
 }
