@@ -82,4 +82,15 @@ public class UsuarioService {
         return usuario.get();
     }
 
+    public Usuario getUsuarioByMatriculaOrEmail(String identificador) {
+        Optional<Usuario> usuario = usuarioRepository.findByMatriculaOrEmail(identificador, identificador);
+        if (usuario.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    STR."Usuário de matrícula ou email \"\{identificador}\" não encontrado."
+            );
+        }
+        return usuario.get();
+    }
+
 }
