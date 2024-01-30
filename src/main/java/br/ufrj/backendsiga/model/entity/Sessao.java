@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -27,5 +26,6 @@ public class Sessao {
     @CreationTimestamp
     private LocalDateTime criacao;
 
-    private Integer expira_segundos;
+    @Column(name = "expira_segundos")
+    private Integer expiraSegundos;
 }

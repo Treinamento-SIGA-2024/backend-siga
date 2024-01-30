@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.model.mapping;
 
 import br.ufrj.backendsiga.model.dto.UsuarioDTO;
 import br.ufrj.backendsiga.model.dto.UsuarioLoginDTO;
+import br.ufrj.backendsiga.model.dto.UsuarioSessaoDTO;
 import br.ufrj.backendsiga.model.entity.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,4 +13,5 @@ public interface UsuarioMapper {
 
     UsuarioDTO toDTO(Usuario usuario);
     Usuario toEntity(UsuarioLoginDTO usuarioLoginDTO);
+    UsuarioSessaoDTO toSessaoDTO(Usuario usuario);
 }

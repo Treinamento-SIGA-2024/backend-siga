@@ -9,28 +9,49 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class SessaoService {
     private final UsuarioService usuarioService;
     private final SessaoRepository sessaoRepository;
 
-    public Sessao Login(UsuarioLoginDTO usuarioLoginDTO) {
+    public Sessao login(UsuarioLoginDTO usuarioLoginDTO) {
         Usuario usuario = usuarioService.getUsuarioByMatriculaOrEmail(usuarioLoginDTO.getIdentificador());
 
-        String senhaReal = usuario.getSenha();
-        String senhaTentativa = usuarioLoginDTO.getSenha();
-
-        if (!senhaReal.equals(senhaTentativa)) {
+        if (!usuario.getSenha().equals(usuarioLoginDTO.getSenha())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Senha inválida.");
         }
 
         Sessao sessao = new Sessao();
         sessao.setUsuario(usuario);
-        sessao.setExpira_segundos(3600);
+        sessao.setCriacao(LocalDateTime.now());
+        sessao.setExpiraSegundos(3600);
 
-        sessaoRepository.saveAndFlush(sessao);
+        return sessaoRepository.save(sessao);
+    }
 
-        return sessaoRepository.findById(sessao.getId()).get();
+    public Usuario validar(UUID id) {
+        Optional<Sessao> optSessao = sessaoRepository.findById(id);
+        if (optSessao.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão não encontrada");
+        }
+        Sessao sessao = optSessao.get();
+
+        LocalDateTime inatividadeMaxima = sessao.getCriacao().plusSeconds(sessao.getExpiraSegundos());
+        LocalDateTime agora = LocalDateTime.now();
+
+        if (agora.isAfter(inatividadeMaxima)) {
+            sessaoRepository.delete(sessao);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sessão expirada");
+        }
+
+        sessao.setCriacao(agora);
+        sessaoRepository.save(sessao);
+
+        return sessao.getUsuario();
     }
 }
