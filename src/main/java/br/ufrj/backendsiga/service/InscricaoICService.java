@@ -196,4 +196,47 @@ public class InscricaoICService {
         inscricaoICRepository.save(inscricaoIC);
         return "Pedido de inscrição de IC cancelado com sucesso";
 }
+
+    public InscricaoIC excluirAluno(Integer inscricaoId, String matriculaProf) {
+
+        final String CODIGO_PADRAO_EXPULSO = "003";
+        final String CODIGO_PADRAO_ATIVO   = "001";
+
+        InscricaoIC alunoInscricaoIC = inscricaoICRepository.findById(inscricaoId).
+                orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição de IC do aluno não encontrada"));
+
+        SituacaoInscricao situacaoAntiga = situacaoInscricaoRepository.findByCodigo(alunoInscricaoIC.getSituacaoInscricao().getCodigo()).get();
+
+        if(!situacaoAntiga.getCodigo().equals(CODIGO_PADRAO_ATIVO)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Aluno não é participante da IC");
+        };
+
+        Usuario professorIC = usuarioRepository.findUsuarioByMatricula(matriculaProf)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Instância de Professor não encontrada"));
+
+        IniciacaoCientifica ic = iniciacaoCientificaRepository
+                .findById(alunoInscricaoIC.getIniciacaoCientifica().getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Não foi possível encontrar a IC desejada"));
+
+
+
+        if(situacaoAntiga.getCodigo().equals(CODIGO_PADRAO_EXPULSO)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Aluno já foi expulso");
+        }
+
+        if(!ic.getInscricoes().contains(alunoInscricaoIC) || !ic.getProfessores().contains(professorIC)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido.");
+        }
+
+
+        Optional<SituacaoInscricao> situacaoNova = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO_EXPULSO);
+
+        alunoInscricaoIC.setSituacaoInscricao(situacaoNova.get());
+        return inscricaoICRepository.save(alunoInscricaoIC);
+
+    }
+
+
+
 }

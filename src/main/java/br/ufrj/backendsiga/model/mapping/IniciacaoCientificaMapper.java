@@ -14,4 +14,5 @@ public interface IniciacaoCientificaMapper {
     IniciacaoCientifica toEntity(IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO);
 
     VisualizarICsProfessorDTO toVisualizarICsProfessorDTO(IniciacaoCientifica iniciacaoCientifica);
+    IniciacaoCientificaProfessorAtivaDTO toAtivaDTO(IniciacaoCientifica iniciacaoCientifica);
 }

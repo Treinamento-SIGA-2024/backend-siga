@@ -2,6 +2,7 @@ package br.ufrj.backendsiga.repository;
 
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.SituacaoCriacaoIC;
+import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
 import br.ufrj.backendsiga.model.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,7 @@ public interface IniciacaoCientificaRepository extends JpaRepository<IniciacaoCi
     Optional<IniciacaoCientifica> findAllByProfessores(Usuario professores);
 
 
-    List<IniciacaoCientifica> findAllBySituacaoCriacao(SituacaoCriacaoIC situacao);  
-}
+    List<IniciacaoCientifica> findAllBySituacaoCriacao(SituacaoCriacaoIC situacao);
+
+    List<IniciacaoCientifica> findAllByProfessoresAndSituacaoCriacao(Usuario professores, SituacaoCriacaoIC situacaoCriacaoIC);
+}   
