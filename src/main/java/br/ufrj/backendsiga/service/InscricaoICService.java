@@ -53,17 +53,19 @@ public class InscricaoICService {
 
         Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).get();
 
-        SituacaoInscricao situacao = situacaoInscricaoRepository.findByCodigo("000").get();
-//      TO DO FILTRAR A SITUAÇÂO POR AQUI
-//        List<IniciacaoCientifica> icsProfessor = iniciacaoCientificaRepository
-//                .findAllByProfessoresIsContaining(professor).stream()
-//                .flatMap(List::get)
-//                .filter(ic -> ic.)
-//                .collect(Collectors.toList());
 
         List<IniciacaoCientifica> icsProfessor = iniciacaoCientificaRepository
                 .findAllByProfessoresIsContaining(professor);
 
+        icsProfessor.forEach(ic->{
+            List<InscricaoIC> inscricoesPendentes = new ArrayList<InscricaoIC>();
+            ic.getInscricoes().forEach(ins->{
+                if(ins.getSituacaoInscricao().getCodigo().equals(SituacaoInscricao.PENDENTE)){
+                    inscricoesPendentes.add(ins);
+                }
+            });
+            ic.setInscricoes(inscricoesPendentes);
+        });
 
         return icsProfessor;
     }
