@@ -9,8 +9,6 @@ import br.ufrj.backendsiga.service.SessaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RequiredArgsConstructor
 @CrossOrigin
 @RestController
@@ -28,6 +26,6 @@ public class SessaoController {
 
     @GetMapping("/id/{id}")
     public UsuarioSessaoDTO validarSessao(@PathVariable String id) {
-        return usuarioMapper.toSessaoDTO(sessaoService.validar(UUID.fromString(id)));
+        return usuarioMapper.toSessaoDTO(sessaoService.validate(id));
     }
 }

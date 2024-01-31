@@ -17,6 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessaoService {
     private final UsuarioService usuarioService;
+
     private final SessaoRepository sessaoRepository;
 
     public Sessao login(UsuarioLoginDTO usuarioLoginDTO) {
@@ -34,10 +35,15 @@ public class SessaoService {
         return sessaoRepository.save(sessao);
     }
 
-    public Usuario validar(UUID id) {
-        Optional<Sessao> optSessao = sessaoRepository.findById(id);
+    public Usuario validate(String id) {
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Conteúdo restrito para usuários autenticados.");
+        }
+        UUID uuid = UUID.fromString(id);
+
+        Optional<Sessao> optSessao = sessaoRepository.findById(uuid);
         if (optSessao.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão não encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão não encontrada.");
         }
         Sessao sessao = optSessao.get();
 
@@ -56,5 +62,11 @@ public class SessaoService {
         sessaoRepository.save(sessao);
 
         return sessao.getUsuario();
+    }
+
+    public Usuario validateAndAssertCargoByNome(String id, String cargo) {
+        Usuario usuario = validate(id);
+        usuarioService.assertUsuarioCargoByNome(usuario, cargo);
+        return usuario;
     }
 }

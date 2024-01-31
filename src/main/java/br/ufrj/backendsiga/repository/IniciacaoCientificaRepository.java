@@ -19,5 +19,7 @@ public interface IniciacaoCientificaRepository extends JpaRepository<IniciacaoCi
 
     Optional<IniciacaoCientifica> findAllByProfessores(Usuario professores);
 
-    List<IniciacaoCientifica> findAllBySituacaoCriacao(SituacaoCriacaoIC situacao);  
+    List<IniciacaoCientifica> findAllBySituacaoCriacao(SituacaoCriacaoIC situacao);
+
+    boolean existsByNome(String nome);
 }

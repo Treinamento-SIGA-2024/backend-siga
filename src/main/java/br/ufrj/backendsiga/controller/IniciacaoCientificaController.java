@@ -11,9 +11,11 @@ import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
 import br.ufrj.backendsiga.service.IniciacaoCientificaService;
+import br.ufrj.backendsiga.service.SessaoService;
 import br.ufrj.backendsiga.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,8 +30,9 @@ public class IniciacaoCientificaController {
 
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
     private final IniciacaoCientificaService iniciacaoCientificaService;
-    private final UsuarioService usuarioService;
+    private final SessaoService sessaoService;
 
+    private final IniciacaoCientificaMapper iniciacaoCientificaMapper = IniciacaoCientificaMapper.INSTANCE;
     @GetMapping()
     public List<IniciacaoCientifica> findAllIniciacaoCientifica() {
         return iniciacaoCientificaRepository.findAll();
@@ -56,13 +59,19 @@ public class IniciacaoCientificaController {
         return iniciacaoCientificaService.findAllBySituacaoCriacaoAceita();
     }
 
-    @PostMapping("/{matriculaProfessorCriador}")
-    public IniciacaoCientificaNestedDTO createIniciacaoCientifica(@PathVariable String matriculaProfessorCriador, @RequestBody IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO) {
-        IniciacaoCientifica iniciacaoCientifica = iniciacaoCientificaService.createIniciacaoCientificaAndAddProfessorByMatricula(
-                IniciacaoCientificaMapper.INSTANCE.toEntity(iniciacaoCientificaCreateDTO),
-                matriculaProfessorCriador
+    //Precisará ser mudado no front-end, antigamente era um post com query parameter da matrícula do professor criador.
+    //Agora recebe-se um Authorization Header com o ID da sessão do professor criador.
+    @PostMapping()
+    public IniciacaoCientificaNestedDTO createIniciacaoCientifica(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId,
+            @RequestBody IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO
+    ) {
+        Usuario professorCriador = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.PROFESSOR);
+        IniciacaoCientifica iniciacaoCientifica = iniciacaoCientificaService.createIniciacaoCientificaAndAddProfessorCriador(
+                iniciacaoCientificaMapper.toEntity(iniciacaoCientificaCreateDTO),
+                professorCriador
         );
-        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(iniciacaoCientifica);
+        return iniciacaoCientificaMapper.toNestedDTO(iniciacaoCientifica);
     }
 
     @PutMapping("/{matriculaCoordenador}/aprovar/{icId}")
