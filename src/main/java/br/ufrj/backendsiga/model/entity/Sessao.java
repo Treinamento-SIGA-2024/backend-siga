@@ -22,9 +22,9 @@ public class Sessao {
     @JsonBackReference
     private Usuario usuario;
 
-    @Column(columnDefinition = "DATETIME")
+    @Column(name = "ultima_atividade", columnDefinition = "DATETIME")
     @CreationTimestamp
-    private LocalDateTime criacao;
+    private LocalDateTime ultimaAtividade;
 
     @Column(name = "expira_segundos")
     private Integer expiraSegundos;

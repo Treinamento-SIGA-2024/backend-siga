@@ -28,7 +28,7 @@ public class SessaoService {
 
         Sessao sessao = new Sessao();
         sessao.setUsuario(usuario);
-        sessao.setCriacao(LocalDateTime.now());
+        sessao.setUltimaAtividade(LocalDateTime.now());
         sessao.setExpiraSegundos(3600);
 
         return sessaoRepository.save(sessao);
@@ -41,15 +41,18 @@ public class SessaoService {
         }
         Sessao sessao = optSessao.get();
 
-        LocalDateTime inatividadeMaxima = sessao.getCriacao().plusSeconds(sessao.getExpiraSegundos());
+        LocalDateTime inatividadeMaxima = sessao.getUltimaAtividade().plusSeconds(sessao.getExpiraSegundos());
         LocalDateTime agora = LocalDateTime.now();
 
-        if (agora.isAfter(inatividadeMaxima)) {
+        boolean sessaoTemTimeout = sessao.getExpiraSegundos() != null;
+        boolean sessaoExpirou = agora.isAfter(inatividadeMaxima);
+
+        if (sessaoTemTimeout && sessaoExpirou) {
             sessaoRepository.delete(sessao);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sessão expirada");
         }
 
-        sessao.setCriacao(agora);
+        sessao.setUltimaAtividade(agora);
         sessaoRepository.save(sessao);
 
         return sessao.getUsuario();
