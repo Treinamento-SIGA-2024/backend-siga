@@ -4,6 +4,7 @@ import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
 import br.ufrj.backendsiga.model.entity.SituacaoInscricao;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,5 @@ import java.util.Optional;
 public interface InscricaoICRepository extends JpaRepository<InscricaoIC, Integer> {
 
   List<InscricaoIC> findAllByIniciacaoCientificaAndSituacaoInscricao(IniciacaoCientifica iniciacaoCientifica, SituacaoInscricao situacaoInscricao);
-
+  List<InscricaoIC> findAllBySituacaoInscricao(SituacaoInscricao situacaoInscricao);
 }

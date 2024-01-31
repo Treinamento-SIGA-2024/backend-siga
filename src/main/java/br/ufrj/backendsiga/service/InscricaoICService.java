@@ -49,6 +49,27 @@ public class InscricaoICService {
         return inscricoesPendentes.stream().map(InscricaoICMapper.INSTANCE::toPendentesDTO).toList();
     }
 
+    public List<IniciacaoCientifica> findAllInscricoesICProfessor(String matricula){
+
+        Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).get();
+
+
+        List<IniciacaoCientifica> icsProfessor = iniciacaoCientificaRepository
+                .findAllByProfessoresIsContaining(professor);
+
+        icsProfessor.forEach(ic->{
+            List<InscricaoIC> inscricoesPendentes = new ArrayList<InscricaoIC>();
+            ic.getInscricoes().forEach(ins->{
+                if(ins.getSituacaoInscricao().getCodigo().equals(SituacaoInscricao.PENDENTE)){
+                    inscricoesPendentes.add(ins);
+                }
+            });
+            ic.setInscricoes(inscricoesPendentes);
+        });
+
+        return icsProfessor;
+    }
+
     public InscricaoIC alterarInscricaoAluno(Integer inscricaoId, AlterarSituacaoAlunoIcBodyDTO body){
         InscricaoIC inscricaoICAluno = inscricaoICRepository.findById(inscricaoId).
                 orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição da IC do aluno não encontrada."));
