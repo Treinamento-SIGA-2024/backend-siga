@@ -5,9 +5,7 @@ import br.ufrj.backendsiga.model.dto.GetICDTO;
 import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
 import br.ufrj.backendsiga.model.dto.VisualizarICsProfessorDTO;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
-import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
-import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
 import br.ufrj.backendsiga.service.InscricaoICService;
 
@@ -64,8 +62,8 @@ public class InscricaoICController {
         inscricaoICService.alterarInscricaoAluno(inscricaoId, bodyAlterar);
     }
 
-    @DeleteMapping("/ic/{inscricaoId}")
-    public String deletarInscricao(@PathVariable Integer inscricaoId){
+    @PutMapping("/ic/cancelar/{inscricaoId}")
+    public String cancelarInscricao(@PathVariable Integer inscricaoId){
         return inscricaoICService.cancelarInscricaoIC(inscricaoId);
     }
 

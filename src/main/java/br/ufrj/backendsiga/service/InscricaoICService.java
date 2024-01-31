@@ -187,10 +187,16 @@ public class InscricaoICService {
     }
 
     public String cancelarInscricaoIC(Integer inscricaoId) {
-        InscricaoIC inscricaoIC = inscricaoICRepository.findById(inscricaoId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição de IC não encontrada"));
-        SituacaoInscricao cancelado = situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.CANCELADO).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Situaçao de IC inválida"));
+        InscricaoIC inscricaoIC = inscricaoICRepository.findById(inscricaoId)
+                .orElseThrow(() -> new ResponseStatusException
+                        (HttpStatus.NOT_FOUND, "Inscrição de IC não encontrada"));
+        SituacaoInscricao cancelado = situacaoInscricaoRepository
+                .findByCodigo(SituacaoInscricao.CANCELADO)
+                .orElseThrow(() -> new ResponseStatusException
+                        (HttpStatus.INTERNAL_SERVER_ERROR, "Situaçao de IC inválida"));
         if(!(inscricaoIC.getSituacaoInscricao().getCodigo().equals(SituacaoInscricao.PENDENTE))) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Inscrição de IC não pode ser cancelada");
+            throw new ResponseStatusException
+                    (HttpStatus.CONFLICT, "Inscrição de IC não pode ser cancelada");
         }
         inscricaoIC.setSituacaoInscricao(cancelado);
         inscricaoICRepository.save(inscricaoIC);
