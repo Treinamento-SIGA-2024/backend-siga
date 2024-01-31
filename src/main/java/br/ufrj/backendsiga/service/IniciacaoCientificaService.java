@@ -179,4 +179,16 @@ public class IniciacaoCientificaService {
         
         return icsAtivasDoProfessor;
     }
+
+    public IniciacaoCientifica addProfessorToIc (Integer icId, Usuario professor) {
+        IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
+        List<Usuario> professoresIc = ic.getProfessores();
+        if (professoresIc.contains(professor)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Professor já está vinculado a essa iniciação científica!");
+        }
+        professoresIc.add(professor);
+        ic.setProfessores(professoresIc);
+
+        return iniciacaoCientificaRepository.save(ic);
+    }
 }
