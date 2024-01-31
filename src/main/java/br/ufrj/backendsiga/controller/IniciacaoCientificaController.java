@@ -9,6 +9,7 @@ import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
 import br.ufrj.backendsiga.model.mapping.UsuarioMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
+import br.ufrj.backendsiga.service.CargoService;
 import br.ufrj.backendsiga.service.IniciacaoCientificaService;
 import br.ufrj.backendsiga.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class IniciacaoCientificaController {
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
     private final IniciacaoCientificaService iniciacaoCientificaService;
     private final UsuarioService usuarioService;
+    private final CargoService cargoService;
+
 
     @GetMapping()
     public List<IniciacaoCientifica> findAllIniciacaoCientifica() {
@@ -81,11 +84,10 @@ public class IniciacaoCientificaController {
     }
 
     @PutMapping("/{icId}/vincular")
-    public String vinculateProfessorIC(@PathVariable Integer icId, @RequestBody UsuarioDTO professor) {
-        System.out.println("entrei aqui");
-        Usuario user = usuarioService.getUsuarioByMatricula(professor.getMatricula());
-        iniciacaoCientificaService.addProfessorToIc(icId, user);
-        System.out.println(user);
-        return "OK";
+    public IniciacaoCientificaNestedDTO vinculateProfessorIC(@PathVariable Integer icId, @RequestBody UsuarioDTO professor) {
+        Cargo cargo = cargoService.getCargoByNome(Cargo.PROFESSOR);
+        Usuario user = usuarioService.getUsuarioByMatriculaAndAssertCargo(professor.getMatricula(), cargo);
+        IniciacaoCientifica ic = iniciacaoCientificaService.addProfessorToIc(icId, user);
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(ic);
     }
 }
