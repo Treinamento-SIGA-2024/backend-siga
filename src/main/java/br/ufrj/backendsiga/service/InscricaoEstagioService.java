@@ -78,6 +78,14 @@ public class InscricaoEstagioService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario não permitido");
         }
         SituacaoInscricao pendente = situacaoInscricaoService.findByCodigo("000");
+
+        List<InscricaoEstagio> lista = inscricaoEstagioRepository.findAllByEstagio(estagio);
+        for (InscricaoEstagio e : lista) {
+            if(e.getAluno() == aluno){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuario ja fez o pedido desse estagio.");
+            }
+        }
+
         InscricaoEstagio novoPedidoDeEstagio = new InscricaoEstagio();
         novoPedidoDeEstagio.setEstagio(estagio);
         novoPedidoDeEstagio.setSituacaoInscricao(pendente);
