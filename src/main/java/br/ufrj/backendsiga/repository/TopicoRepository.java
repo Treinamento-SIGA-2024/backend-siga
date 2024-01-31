@@ -8,4 +8,6 @@ import java.util.List;
 
 @Repository
 public interface TopicoRepository extends JpaRepository<Topico, Integer> {
+    
+    Topico findTopicoByNome(String nome);
 }
