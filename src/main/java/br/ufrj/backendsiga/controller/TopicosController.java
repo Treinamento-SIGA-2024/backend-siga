@@ -37,4 +37,8 @@ public class TopicosController {
         Topico updatedTopico = topicoService.updateTopicoById(id, entity);
         return TopicoMapper.INSTANCE.toDTO(updatedTopico);
     }
+    @DeleteMapping("{id}")
+    public void deleteTopico(@PathVariable Integer id) {
+        topicoService.deleteTopicoById(id);
+    }
 }
