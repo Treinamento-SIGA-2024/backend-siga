@@ -60,30 +60,29 @@ public class IniciacaoCientificaService {
     }
 
     @Transactional
-    public IniciacaoCientifica createIniciacaoCientificaAndAddProfessorByMatricula(IniciacaoCientifica iniciacaoCientifica, String matriculaProfessorCriador) {
-        Usuario professorCriador = usuarioService.getUsuarioByMatriculaAndAssertCargoByNome(matriculaProfessorCriador, Cargo.PROFESSOR);
-
+    public IniciacaoCientifica createIniciacaoCientificaAndAddProfessorCriador(IniciacaoCientifica iniciacaoCientifica, Usuario professorCriador) {
         if (iniciacaoCientifica.getNome() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A iniciação científica precisa conter um nome."
             );
         }
-        if (iniciacaoCientifica.getRemuneracao() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "A iniciação científica precisa conter a remuneração (utilize 0 para não-remunerada)"
+        if (iniciacaoCientificaRepository.existsByNome(iniciacaoCientifica.getNome())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Já existe uma iniciação científica com este nome."
             );
         }
-
         //Por ser uma relação ManyToMany, precisamos de cautela, para evitar adulteração pela parte do front:
         //1. Pega os professores do RequestBody e os procura por id;
         //2. Coloca os dados atualizados na entidade
         //3. Atualiza a relação de cada professor para com essa ic
-        List<Usuario> professores = usuarioService.getListUsuarioByIdAndAssertCargoByNome(
-                iniciacaoCientifica.getProfessores().stream().map(Usuario::getId).toList(),
-                Cargo.PROFESSOR
-        );
-        iniciacaoCientifica.setProfessores(new ArrayList<Usuario>(professores));
-        professores.forEach(professor -> professor.getIniciacoesCientificas().add(iniciacaoCientifica));
+        if (!iniciacaoCientifica.getProfessores().isEmpty()) {
+            List<Usuario> professores = usuarioService.getListUsuarioByIdAndAssertCargoByNome(
+                    iniciacaoCientifica.getProfessores().stream().map(Usuario::getId).toList(),
+                    Cargo.PROFESSOR
+            );
+            iniciacaoCientifica.setProfessores(professores);
+            professores.forEach(professor -> professor.getIniciacoesCientificas().add(iniciacaoCientifica));
+        }
 
         //Mesma lógica aqui.
         List<Topico> topicos = topicoService.getListTopicoById(
@@ -92,15 +91,21 @@ public class IniciacaoCientificaService {
         iniciacaoCientifica.setTopicos(topicos);
         topicos.forEach(topico -> topico.getIniciacoesCientificas().add(iniciacaoCientifica));
 
-        iniciacaoCientifica.getProfessores().add(professorCriador);
-
-        SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.PENDENTE);
-        iniciacaoCientifica.setSituacaoCriacao(situacaoPendente);
+        if (!iniciacaoCientifica.getProfessores().contains(professorCriador)) {
+            iniciacaoCientifica.getProfessores().add(professorCriador);
+        }
 
         if (iniciacaoCientifica.getTopicos().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A iniciação científica precisa conter pelo menos um tópico"
             );
+        }
+
+        SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.PENDENTE);
+        iniciacaoCientifica.setSituacaoCriacao(situacaoPendente);
+
+        if (iniciacaoCientifica.getRemuneracao() != null && iniciacaoCientifica.getRemuneracao() == 0) {
+            iniciacaoCientifica.setRemuneracao(null);
         }
 
         return iniciacaoCientificaRepository.saveAndFlush(iniciacaoCientifica);

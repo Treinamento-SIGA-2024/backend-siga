@@ -25,7 +25,6 @@ public class UsuarioService {
         usuarios.forEach(usuario -> assertUsuarioCargoByNome(usuario, Cargo.PROFESSOR));
         return usuarios;
     }
-
     public Usuario getUsuarioByMatriculaAndAssertCargoByNome(String matricula, String cargo) {
         Usuario usuario = getUsuarioByMatricula(matricula);
         assertUsuarioCargoByNome(usuario, cargo);
@@ -36,24 +35,27 @@ public class UsuarioService {
         assertUsuarioCargo(usuario, cargo);
         return usuario;
     }
-
-
     public void assertUsuarioCargoByNome(Usuario usuario, String cargo) {
         assertUsuarioCargo(usuario, cargoService.getCargoByNome(cargo));
     }
     public void assertUsuarioCargo(Usuario usuario, Cargo cargo) {
         if (!usuario.getCargos().contains(cargo)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "Usuário de matrícula " +
-                    usuario.getMatricula() +
-                    " e cargos: " +
-                    usuario.getCargos().stream().map(c -> c.getNome() + ", ").collect(Collectors.joining(", ")) +
-                    "não possui cargo de " +
-                    cargo.getNome() + "."
+                    "Usuário de matrícula " + usuario.getMatricula() +
+                    " e cargos: " + usuario.getCargos().stream().map(c -> c.getNome() + ", ").collect(Collectors.joining(", ")) +
+                    "não possui cargo de " + cargo.getNome() + "."
             );
         }
     };
-
+    public void assertUsuarioCargos(Usuario usuario, List<Cargo> cargos) {
+        if (!usuario.getCargos().containsAll(cargos)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Usuário de matrícula " + usuario.getMatricula() +
+                    " e cargos: " + usuario.getCargos().stream().map(cargo -> cargo.getNome() + ", ").collect(Collectors.joining(", ")) +
+                    "não possui cargos de: " + cargos.stream().map(cargo -> cargo.getNome() + ", ").collect(Collectors.joining(", "))
+            );
+        }
+    };
     public List<Usuario> getAllByCargoName (String nomeCargo) {
         List<Usuario> users;
         List<Usuario> retorno = new ArrayList<Usuario>();
@@ -69,17 +71,24 @@ public class UsuarioService {
 
         return retorno;
     }
-
     public Usuario getUsuarioByMatricula(String matricula) {
         Optional<Usuario> usuario = usuarioRepository.findByMatricula(matricula);
         if (usuario.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Usuário de matrícula " +
-                            matricula +
-                            " não encontrado."
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    STR."Usuário de matrícula \{matricula} não encontrado."
             );
         }
         return usuario.get();
     }
-
+    public Usuario getUsuarioByMatriculaOrEmail(String identificador) {
+        Optional<Usuario> usuario = usuarioRepository.findByMatriculaOrEmail(identificador, identificador);
+        if (usuario.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    STR."Usuário de matrícula ou email \"\{identificador}\" não encontrado."
+            );
+        }
+        return usuario.get();
+    }
 }
