@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +25,14 @@ public class TopicoService {
     }
 
     public Topico createTopico(Topico entity) {
-        if (topicoRepository.findById(entity.getId()).isPresent()) {
+        Optional<Topico> topico = topicoRepository.findTopicoByNome(entity.getNome());
+        if (topico.isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este topico já existe.");
         }
-        return topicoRepository.save(entity);
+        Topico novoTopico = new Topico();
+        novoTopico.setNome(entity.getNome());
+
+        return topicoRepository.save(novoTopico);
     }
 
     public Topico updateTopicoById(Integer id, Topico topico) {
