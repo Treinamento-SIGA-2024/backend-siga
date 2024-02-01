@@ -26,6 +26,7 @@ public class IniciacaoCientificaService {
     private final SituacaoCriacaoICService situacaoCriacaoService;
     private final TopicoService topicoService;
     private final InscricaoICService inscricaoICService;
+    private final SituacaoInscricaoService situacaoInscricaoService;
 
 
     public IniciacaoCientifica getIniciacaoCientificaById(Integer icId) {
@@ -162,5 +163,37 @@ public class IniciacaoCientificaService {
         ic.setInscricoes(ativas);
 
         return ic;
+    }
+
+    public List<IniciacaoCientifica> findAllIniciacaoCientificaAceitasByProfessor(String matricula){
+        Usuario professor = usuarioService.getUsuarioByMatriculaAndAssertCargoByNome(matricula, Cargo.PROFESSOR);
+        
+        SituacaoCriacaoIC situacaoAceita = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
+
+        List<IniciacaoCientifica> icsAtivasDoProfessor = iniciacaoCientificaRepository.findAllByProfessoresAndSituacaoCriacao(professor, situacaoAceita);
+
+        icsAtivasDoProfessor.stream().forEach(ic->{
+            List<InscricaoIC> inscricoesAtivas = new ArrayList<InscricaoIC>();
+            ic.getInscricoes().stream().forEach(ins->{
+                if(ins.getSituacaoInscricao().getCodigo().equals(SituacaoInscricao.ATIVO)){
+                    inscricoesAtivas.add(ins);
+                }
+            });
+            ic.setInscricoes(inscricoesAtivas);
+        });
+        
+        return icsAtivasDoProfessor;
+    }
+
+    public IniciacaoCientifica addProfessorToIc (Integer icId, Usuario professor) {
+        IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
+        List<Usuario> professoresIc = ic.getProfessores();
+        if (professoresIc.contains(professor)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Professor já está vinculado a essa iniciação científica!");
+        }
+        professoresIc.add(professor);
+        ic.setProfessores(professoresIc);
+
+        return iniciacaoCientificaRepository.save(ic);
     }
 }

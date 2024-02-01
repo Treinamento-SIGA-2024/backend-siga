@@ -3,7 +3,10 @@ package br.ufrj.backendsiga.controller;
 import br.ufrj.backendsiga.model.dto.AlterarSituacaoAlunoIcBodyDTO;
 import br.ufrj.backendsiga.model.dto.GetICDTO;
 import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
+import br.ufrj.backendsiga.model.dto.VisualizarICsProfessorDTO;
+import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
+import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
 import br.ufrj.backendsiga.service.InscricaoICService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,15 +47,31 @@ public class InscricaoICController {
     public List<InscricaoICPendentesDTO> listaICsPendentes(@PathVariable String matricula, @PathVariable Integer icId ){
         return inscricaoICService.findInscricoesICProfessor(matricula, icId);
     }
-
+    @GetMapping("/ic/{matricula}")
+    public List<VisualizarICsProfessorDTO> listaICsProfessor(@PathVariable String matricula ){
+        List<IniciacaoCientifica> iniciacaoCientificasProfessor
+                = inscricaoICService.findAllInscricoesICProfessor(matricula);
+        return iniciacaoCientificasProfessor.stream()
+                .map(IniciacaoCientificaMapper
+                        .INSTANCE::toVisualizarICsProfessorDTO).toList();
+    }
+    //  CASO NÃO FOSSE RETORNADO UMA LISTA
+    //  IniciacaoCientificaMapper.INSTANCE.toVisualizarICsProfessorDTO(iniciacaoCientificasProfessor)
     @PutMapping("/ic/{inscricaoId}")
     public void alterarSituacaoInscricaoAluno(@PathVariable Integer inscricaoId, @RequestBody AlterarSituacaoAlunoIcBodyDTO bodyAlterar){
         inscricaoICService.alterarInscricaoAluno(inscricaoId, bodyAlterar);
     }
 
-    @DeleteMapping("/ic/{inscricaoId}")
-    public String deletarInscricao(@PathVariable Integer inscricaoId){
+    @PutMapping("/ic/cancelar/{inscricaoId}")
+    public String cancelarInscricao(@PathVariable Integer inscricaoId){
         return inscricaoICService.cancelarInscricaoIC(inscricaoId);
     }
-    
+
+
+    @PutMapping("/ic/{inscricaoId}/{matriculaProf}")
+    public InscricaoIC excluirAlunoIc(@PathVariable Integer inscricaoId, @PathVariable String matriculaProf){
+        return inscricaoICService.excluirAluno(inscricaoId, matriculaProf);
+    }
+
+
 }
