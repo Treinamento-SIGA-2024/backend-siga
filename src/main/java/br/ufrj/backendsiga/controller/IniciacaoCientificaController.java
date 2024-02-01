@@ -67,11 +67,13 @@ public class IniciacaoCientificaController {
             @RequestBody IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO
     ) {
         Usuario professorCriador = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.PROFESSOR);
-        IniciacaoCientifica iniciacaoCientifica = iniciacaoCientificaService.createIniciacaoCientificaAndAddProfessorCriador(
-                iniciacaoCientificaMapper.toEntity(iniciacaoCientificaCreateDTO),
-                professorCriador
+
+        return iniciacaoCientificaMapper.toNestedDTO(
+                iniciacaoCientificaService.createIniciacaoCientificaAndAddProfessorCriador(
+                    iniciacaoCientificaMapper.toEntity(iniciacaoCientificaCreateDTO),
+                    professorCriador
+            )
         );
-        return iniciacaoCientificaMapper.toNestedDTO(iniciacaoCientifica);
     }
 
     @PutMapping("/{matriculaCoordenador}/aprovar/{icId}")

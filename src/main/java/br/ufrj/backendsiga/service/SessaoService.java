@@ -36,6 +36,8 @@ public class SessaoService {
     }
 
     public Usuario validate(String id) {
+        LocalDateTime agora = LocalDateTime.now();
+
         if (id == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Conteúdo restrito para usuários autenticados.");
         }
@@ -47,15 +49,15 @@ public class SessaoService {
         }
         Sessao sessao = optSessao.get();
 
-        LocalDateTime inatividadeMaxima = sessao.getUltimaAtividade().plusSeconds(sessao.getExpiraSegundos());
-        LocalDateTime agora = LocalDateTime.now();
-
         boolean sessaoTemTimeout = sessao.getExpiraSegundos() != null;
-        boolean sessaoExpirou = agora.isAfter(inatividadeMaxima);
 
-        if (sessaoTemTimeout && sessaoExpirou) {
-            sessaoRepository.delete(sessao);
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sessão expirada");
+        if (sessaoTemTimeout) {
+            LocalDateTime inatividadeMaxima = sessao.getUltimaAtividade().plusSeconds(sessao.getExpiraSegundos());
+            boolean sessaoExpirou = agora.isAfter(inatividadeMaxima);
+            if (sessaoExpirou) {
+                sessaoRepository.delete(sessao);
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sessão expirada");
+            }
         }
 
         sessao.setUltimaAtividade(agora);
