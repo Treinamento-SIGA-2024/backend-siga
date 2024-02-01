@@ -1,14 +1,12 @@
 package br.ufrj.backendsiga.controller;
 
+import br.ufrj.backendsiga.model.dto.TopicoCreateDTO;
 import br.ufrj.backendsiga.model.dto.TopicoDTO;
 import br.ufrj.backendsiga.model.entity.Topico;
 import br.ufrj.backendsiga.model.mapping.TopicoMapper;
 import br.ufrj.backendsiga.service.TopicoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +22,23 @@ public class TopicosController {
     public List<TopicoDTO> getTopicos() {
         return topicoService.getListTopico().stream()
                 .map(mapper::toDTO).toList();
+    }
+
+    @PostMapping()
+    public TopicoDTO createTopico(@RequestBody TopicoCreateDTO novoTopico) {
+        Topico entity = TopicoMapper.INSTANCE.toEntity(novoTopico);
+        Topico createdTopico = topicoService.createTopico(entity);
+        return TopicoMapper.INSTANCE.toDTO(createdTopico);
+    }
+
+    @PutMapping("{id}")
+    public TopicoDTO updateTopico(@PathVariable Integer id, @RequestBody TopicoCreateDTO topicoCreateDTO) {
+        Topico entity = TopicoMapper.INSTANCE.toEntity(topicoCreateDTO);
+        Topico updatedTopico = topicoService.updateTopicoById(id, entity);
+        return TopicoMapper.INSTANCE.toDTO(updatedTopico);
+    }
+    @DeleteMapping("{id}")
+    public void deleteTopico(@PathVariable Integer id) {
+        topicoService.deleteTopicoById(id);
     }
 }
