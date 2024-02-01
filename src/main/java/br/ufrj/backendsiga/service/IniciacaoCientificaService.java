@@ -74,12 +74,14 @@ public class IniciacaoCientificaService {
         //1. Pega os professores do RequestBody e os procura por id;
         //2. Coloca os dados atualizados na entidade
         //3. Atualiza a relação de cada professor para com essa ic
-        List<Usuario> professores = usuarioService.getListUsuarioByIdAndAssertCargoByNome(
-                iniciacaoCientifica.getProfessores().stream().map(Usuario::getId).toList(),
-                Cargo.PROFESSOR
-        );
-        iniciacaoCientifica.setProfessores(professores);
-        professores.forEach(professor -> professor.getIniciacoesCientificas().add(iniciacaoCientifica));
+        if (!iniciacaoCientifica.getProfessores().isEmpty()) {
+            List<Usuario> professores = usuarioService.getListUsuarioByIdAndAssertCargoByNome(
+                    iniciacaoCientifica.getProfessores().stream().map(Usuario::getId).toList(),
+                    Cargo.PROFESSOR
+            );
+            iniciacaoCientifica.setProfessores(professores);
+            professores.forEach(professor -> professor.getIniciacoesCientificas().add(iniciacaoCientifica));
+        }
 
         //Mesma lógica aqui.
         List<Topico> topicos = topicoService.getListTopicoById(
