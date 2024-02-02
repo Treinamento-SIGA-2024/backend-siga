@@ -24,7 +24,7 @@ public class InscricaoICController {
     @PostMapping("/IC/{ic_id}/aluno/{aluno_id}")
     public void createInscricaoIC(@PathVariable Integer ic_id,
                                          @PathVariable Integer aluno_id) {
-                                            
+
         inscricaoICService.criarInscricaoIC(ic_id, aluno_id);
     }
 

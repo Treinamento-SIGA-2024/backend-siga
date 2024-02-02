@@ -112,6 +112,7 @@ public class InscricaoICService {
 
     public boolean verificaEntradaDuplicada(Optional<Usuario> aluno, Integer ic_id) {
         List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+        System.out.println(aluno);
 
         for(InscricaoIC inscricao : inscricoes) {
             Integer id = inscricao.getIniciacaoCientifica().getId();
@@ -136,18 +137,20 @@ public class InscricaoICService {
         IniciacaoCientifica IC = iniciacaoCientificaRepository.findById(ic_id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "IC não encontrada."));
 
-        boolean isRemunerado = IC.getRemuneracao() > 0;
+
+        boolean isRemunerado = IC.getRemuneracao() == null || IC.getRemuneracao() > 0;
 
         if (isRemunerado && verificaRemuneracaoAluno(aluno)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário já possui uma IC remunerada.");
         }
-
+        System.out.println("Antes do if");
         if(verificaEntradaDuplicada(aluno, ic_id)) {
+            System.out.println("Entrei no if");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inscrito nessa IC");
         }
-
+        System.out.println("Depois do if");
         Optional<SituacaoInscricao> situacao = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
-
+        System.out.println("Antes de setar");
         InscricaoIC inscricaoIC = new InscricaoIC();
 
         inscricaoIC.setIniciacaoCientifica(IC);
@@ -155,6 +158,7 @@ public class InscricaoICService {
         inscricaoIC.setSituacaoInscricao(situacao.get());
 
         inscricaoICRepository.save(inscricaoIC);
+        System.out.println("Depois de setar");
     }
 
     public List<GetICDTO> verInscricoesIC(Integer aluno_id){

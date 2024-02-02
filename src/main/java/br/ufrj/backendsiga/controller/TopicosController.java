@@ -26,6 +26,8 @@ public class TopicosController {
 
     @PostMapping()
     public TopicoDTO createTopico(@RequestBody TopicoCreateDTO novoTopico) {
+        System.out.println("entrei");
+        System.out.println(novoTopico);
         Topico entity = TopicoMapper.INSTANCE.toEntity(novoTopico);
         Topico createdTopico = topicoService.createTopico(entity);
         return TopicoMapper.INSTANCE.toDTO(createdTopico);
