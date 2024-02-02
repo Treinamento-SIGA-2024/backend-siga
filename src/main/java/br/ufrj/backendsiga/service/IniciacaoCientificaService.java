@@ -49,7 +49,13 @@ public class IniciacaoCientificaService {
 
     public List<IniciacaoCientifica> findAllBySituacaoCriacaoAceita(){
         SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
-        return iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoPendente);
+
+        List<IniciacaoCientifica> ics =  iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoPendente);
+        for (int i = 0; i < ics.size(); i++) {
+            List<InscricaoIC> inscricoesAtivas = inscricaoICService.getInscricoesICAtivas(ics.get(i).getId());
+            ics.get(i).setInscricoes(inscricoesAtivas);
+        }
+        return ics;
     }
 
     @Transactional
