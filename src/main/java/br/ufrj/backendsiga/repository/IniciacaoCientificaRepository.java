@@ -29,8 +29,14 @@ public interface IniciacaoCientificaRepository extends JpaRepository<IniciacaoCi
     boolean existsByNome(String nome);
 
     @Query(
-        value = "SELECT ic.* FROM iniciacao_cientifica ic JOIN inscricao_ic ii ON ic.id=ii.ic_id WHERE ii.aluno_id = :alunoId AND (ii.situacao_id  = 1 OR ii.situacao_id  = 2);",
+        value = "SELECT ic.* FROM iniciacao_cientifica ic JOIN inscricao_ic ii ON ic.id=ii.ic_id WHERE ii.aluno_id = :alunoId AND (ii.situacao_id  = 1 OR ii.situacao_id  = 2) ORDER BY ic.id;",
         nativeQuery = true
     )
     List<IniciacaoCientifica> findIcsAlunoPendenteOuAceita(@Param("alunoId") Integer alunoId);
+
+    @Query(
+        value = "SELECT ic.* FROM iniciacao_cientifica ic JOIN inscricao_ic ii ON ic.id=ii.ic_id WHERE ii.aluno_id = :alunoId AND ii.situacao_id  = 2 ORDER BY ic.id;",
+        nativeQuery = true
+    )
+    List<IniciacaoCientifica> findIcsAlunoAceito(@Param("alunoId") Integer alunoId);
 }

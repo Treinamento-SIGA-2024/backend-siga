@@ -82,6 +82,15 @@ public class IniciacaoCientificaController {
         return retorno;
     }
 
+    @GetMapping("/aluno")
+    public List<IniciacaoCientificaNestedDTO> findAllIniciacaoCientificaAlunoInscrito(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId
+    ){
+        Usuario aluno = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.ALUNO);
+        List<IniciacaoCientifica> icsDoAluno = iniciacaoCientificaService.findAllIniciacoesCientificasAlunoInscrito(aluno);
+        return icsDoAluno.stream().map(ic->iniciacaoCientificaMapper.toNestedDTO(ic)).toList();
+    }
+
     //Precisará ser mudado no front-end, antigamente era um post com query parameter da matrícula do professor criador.
     //Agora recebe-se um Authorization Header com o ID da sessão do professor criador.estagio
     @PostMapping()

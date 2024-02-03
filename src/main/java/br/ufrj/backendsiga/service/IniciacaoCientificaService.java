@@ -220,4 +220,13 @@ public class IniciacaoCientificaService {
 
         return iniciacaoCientificaRepository.save(ic);
     }
+
+    public List<IniciacaoCientifica> findAllIniciacoesCientificasAlunoInscrito(Usuario aluno){
+        List<IniciacaoCientifica> icsDoAluno = iniciacaoCientificaRepository.findIcsAlunoAceito(aluno.getId());
+        for (int i = 0; i < icsDoAluno.size(); i++) {
+            List<InscricaoIC> inscricoesAtivas = inscricaoICService.getInscricoesICAtivas(icsDoAluno.get(i).getId());
+            icsDoAluno.get(i).setInscricoes(inscricoesAtivas);
+          }
+        return icsDoAluno;
+    }
 }
