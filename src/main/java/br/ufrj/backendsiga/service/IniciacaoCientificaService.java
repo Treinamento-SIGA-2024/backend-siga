@@ -1,14 +1,9 @@
 package br.ufrj.backendsiga.service;
-import br.ufrj.backendsiga.model.dto.IniciacaoCientificaDTO;
-import br.ufrj.backendsiga.model.dto.IniciacaoCientificaNestedDTO;
+
 import br.ufrj.backendsiga.model.entity.*;
-import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
-import br.ufrj.backendsiga.model.mapping.InscricaoICMapper;
 import br.ufrj.backendsiga.repository.IniciacaoCientificaRepository;
-import br.ufrj.backendsiga.repository.SituacaoCriacaoICRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
