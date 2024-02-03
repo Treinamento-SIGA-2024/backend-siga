@@ -110,9 +110,9 @@ public class IniciacaoCientificaService {
         SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.PENDENTE);
         iniciacaoCientifica.setSituacaoCriacao(situacaoPendente);
 
-        if (iniciacaoCientifica.getRemuneracao() != null && iniciacaoCientifica.getRemuneracao() == 0) {
-            iniciacaoCientifica.setRemuneracao(null);
-        }
+//        if (iniciacaoCientifica.getRemuneracao() != null && iniciacaoCientifica.getRemuneracao() == 0) {
+//            iniciacaoCientifica.setRemuneracao();
+//        }
 
         return iniciacaoCientificaRepository.saveAndFlush(iniciacaoCientifica);
     }

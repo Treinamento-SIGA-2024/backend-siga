@@ -38,7 +38,7 @@ public class SessaoService {
     public Usuario validate(String id) {
         LocalDateTime agora = LocalDateTime.now();
 
-        if (id == null) {
+        if (id.equals("null")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Conteúdo restrito para usuários autenticados.");
         }
         UUID uuid = UUID.fromString(id);

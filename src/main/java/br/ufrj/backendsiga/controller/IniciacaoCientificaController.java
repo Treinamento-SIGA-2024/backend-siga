@@ -43,8 +43,8 @@ public class IniciacaoCientificaController {
     }
 
     @GetMapping("/{icId}")
-    public IniciacaoCientifica getIniciacaoCientificaById(@PathVariable String icId) {
-        return iniciacaoCientificaService.getIniciacaoCientificaById(Integer.parseInt(icId));
+    public IniciacaoCientificaNestedDTO getIniciacaoCientificaById(@PathVariable String icId) {
+        return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(iniciacaoCientificaService.getIniciacaoCientificaById(Integer.parseInt(icId)));
     }
 
     @GetMapping("/{icId}/ativos")
@@ -60,22 +60,32 @@ public class IniciacaoCientificaController {
     }
 
     @GetMapping("/pendentes")
-    public List<IniciacaoCientifica> findAllIniciacaoCientificaPendente() {
-        return iniciacaoCientificaService.findAllBySituacaoCriacaoPendente();
+    public List<IniciacaoCientificaNestedDTO> findAllIniciacaoCientificaPendente() {
+        List<IniciacaoCientifica> lista = iniciacaoCientificaService.findAllBySituacaoCriacaoPendente();
+        List<IniciacaoCientificaNestedDTO> retorno = lista.stream().
+                map(IniciacaoCientificaMapper.INSTANCE::toNestedDTO).toList();
+
+        return retorno;
     }
 
     @GetMapping("/aceitas")
-    public List<IniciacaoCientifica> findAllIniciacaoCientificaAceita() {
-        return iniciacaoCientificaService.findAllBySituacaoCriacaoAceita();
+    public List<IniciacaoCientificaNestedDTO> findAllIniciacaoCientificaAceita() {
+        List<IniciacaoCientifica> lista = iniciacaoCientificaService.findAllBySituacaoCriacaoAceita();
+        List<IniciacaoCientificaNestedDTO> retorno = lista.stream().map((ic) ->
+            IniciacaoCientificaMapper.INSTANCE.toNestedDTO(ic)
+        ).toList();
+
+        return retorno;
     }
 
     //Precisará ser mudado no front-end, antigamente era um post com query parameter da matrícula do professor criador.
-    //Agora recebe-se um Authorization Header com o ID da sessão do professor criador.
+    //Agora recebe-se um Authorization Header com o ID da sessão do professor criador.estagio
     @PostMapping()
     public IniciacaoCientificaNestedDTO createIniciacaoCientifica(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId,
             @RequestBody IniciacaoCientificaCreateDTO iniciacaoCientificaCreateDTO
     ) {
+        System.out.println(sessaoId);
         Usuario professorCriador = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.PROFESSOR);
 
         return iniciacaoCientificaMapper.toNestedDTO(
@@ -85,14 +95,14 @@ public class IniciacaoCientificaController {
             )
         );
     }
-
     @PutMapping("/{matriculaCoordenador}/aprovar/{icId}")
-    public IniciacaoCientifica approvePedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
-        return iniciacaoCientificaService.approvePedido(icId, matriculaCoordenador);
+    public void approvePedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
+        iniciacaoCientificaService.approvePedido(icId, matriculaCoordenador);
     }
+
     @PutMapping("/{matriculaCoordenador}/rejeitar/{icId}")
-    public IniciacaoCientifica rejectPedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
-        return iniciacaoCientificaService.rejectPedido(icId, matriculaCoordenador);
+    public void rejectPedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
+         iniciacaoCientificaService.rejectPedido(icId, matriculaCoordenador);
     }
 
     @PutMapping("/{icId}/vincular")
