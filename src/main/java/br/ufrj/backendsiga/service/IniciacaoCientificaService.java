@@ -47,15 +47,33 @@ public class IniciacaoCientificaService {
         return iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoPendente);
     }
 
-    public List<IniciacaoCientifica> findAllBySituacaoCriacaoAceita(){
-        SituacaoCriacaoIC situacaoPendente = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
+    public List<IniciacaoCientifica> findAllBySituacaoCriacaoAceitaAndAlunoNaoInscrito(Usuario aluno){
+        //Quero listar as ics para o aluno em quais esta com a situação cancelado/recusado/nãoInscrito
+        SituacaoCriacaoIC situacaoAtivas = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
+        
+        List<IniciacaoCientifica> icsAlunoInscrito = iniciacaoCientificaRepository.findIcsAlunoPendenteOuAceita(aluno.getId());
 
-        List<IniciacaoCientifica> ics =  iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoPendente);
-        for (int i = 0; i < ics.size(); i++) {
-            List<InscricaoIC> inscricoesAtivas = inscricaoICService.getInscricoesICAtivas(ics.get(i).getId());
-            ics.get(i).setInscricoes(inscricoesAtivas);
+        List<IniciacaoCientifica> ics =  iniciacaoCientificaRepository.findAllBySituacaoCriacao(situacaoAtivas);
+       
+        List <IniciacaoCientifica> filtroIcAlunoNãoInscrito = new ArrayList<IniciacaoCientifica>();
+
+        for(int i=0; i<ics.size(); i++){
+            Boolean encontrado = false;
+            for(int j=0; j<icsAlunoInscrito.size(); j++){
+                if(ics.get(i).equals(icsAlunoInscrito.get(j))){
+                    encontrado = true;
+                }
+            }
+            if(!encontrado){
+                filtroIcAlunoNãoInscrito.add(ics.get(i));
+            }
         }
-        return ics;
+        
+        for (int i = 0; i < filtroIcAlunoNãoInscrito.size(); i++) {
+          List<InscricaoIC> inscricoesAtivas = inscricaoICService.getInscricoesICAtivas(filtroIcAlunoNãoInscrito.get(i).getId());
+          filtroIcAlunoNãoInscrito.get(i).setInscricoes(inscricoesAtivas);
+        }
+        return filtroIcAlunoNãoInscrito;
     }
 
     @Transactional
