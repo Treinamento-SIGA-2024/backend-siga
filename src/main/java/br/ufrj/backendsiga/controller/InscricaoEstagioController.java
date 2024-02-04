@@ -47,4 +47,10 @@ public class InscricaoEstagioController {
     public void postFomularioAluno(@RequestBody FormularioEstagioBodyDTO body){
         inscricaoEstagioService.gerarPedido(body.getMatricula(), body.getEstagioId());
     }
+
+    @PutMapping("/estagio/cancelar/{inscricaoId}")
+    public String cancelarInscricaoEstagio(@PathVariable Integer inscricaoId) {
+
+        return inscricaoEstagioService.cancelarInscricaoEstagio(inscricaoId);
+    }
 }
