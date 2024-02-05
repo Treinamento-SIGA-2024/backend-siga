@@ -14,4 +14,6 @@ public interface InscricaoEstagioRepository extends JpaRepository<InscricaoEstag
 
     List<InscricaoEstagio> findAllBySituacaoInscricao(SituacaoInscricao situacaoInscricao);
     List<InscricaoEstagio> findAllByEstagio(Estagio estagio);
+
+    List<InscricaoEstagio> findAllByEstagioIdAndSituacaoInscricao(Integer estagioId, SituacaoInscricao situacaoInscricao);
 }

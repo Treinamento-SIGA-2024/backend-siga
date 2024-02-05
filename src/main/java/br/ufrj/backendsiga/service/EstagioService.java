@@ -21,7 +21,7 @@ public class EstagioService {
         List<Estagio> estagiosComVagas = new ArrayList<>();
 
         for (Estagio estagio : estagios) {
-            if (estagio.getQuantidadeVagas() != 0) {
+            if (estagio.getQuantidadeVagas() > 0) {
                 estagiosComVagas.add(estagio);
             }
         }

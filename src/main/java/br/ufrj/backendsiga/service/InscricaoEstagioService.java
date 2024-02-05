@@ -54,6 +54,7 @@ public class InscricaoEstagioService {
         Estagio estagio = inscricaoEstagio.getEstagio();
         estagio.setQuantidadeVagas(estagio.getQuantidadeVagas()-1);
         estagioRepository.save(estagio);
+        checkVagasEstagio(estagio);
         return inscricaoEstagioRepository.save(inscricaoEstagio);
     }
     public InscricaoEstagio rejectPedido(Integer id) {
@@ -133,5 +134,17 @@ public class InscricaoEstagioService {
         inscricaoEstagioRepository.save(inscricaoEstagio);
 
         return "Pedido de inscrição em estágio cancelada.";
+    }
+
+    public void checkVagasEstagio(Estagio estagio) {
+        if (estagio.getQuantidadeVagas() == 0) {
+            List<InscricaoEstagio> inscricoesPendentes = inscricaoEstagioRepository.
+                    findAllByEstagioIdAndSituacaoInscricao(estagio.getId(),
+                            situacaoInscricaoService.findByCodigo(SituacaoInscricao.PENDENTE));
+            for (InscricaoEstagio inscricao:inscricoesPendentes) {
+                inscricao.setSituacaoInscricao(situacaoInscricaoService.findByCodigo(SituacaoInscricao.RECUSADO));
+            }
+
+        }
     }
 }
