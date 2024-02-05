@@ -16,4 +16,8 @@ public interface InscricaoICRepository extends JpaRepository<InscricaoIC, Intege
 
   List<InscricaoIC> findAllByIniciacaoCientificaAndSituacaoInscricao(IniciacaoCientifica iniciacaoCientifica, SituacaoInscricao situacaoInscricao);
   List<InscricaoIC> findAllBySituacaoInscricao(SituacaoInscricao situacaoInscricao);
+
+  List<InscricaoIC> findAllBySituacaoInscricaoAndAlunoId(SituacaoInscricao situacaoInscricao, Integer alunoId);
+
+  InscricaoIC findByAlunoIdAndIniciacaoCientifica(Integer alunoId, IniciacaoCientifica iniciacaoCientifica);
 }

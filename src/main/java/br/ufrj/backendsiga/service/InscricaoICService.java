@@ -27,6 +27,7 @@ public class InscricaoICService {
     private final IniciacaoCientificaRepository iniciacaoCientificaRepository;
     private final InscricaoICRepository inscricaoICRepository;
     private final SituacaoInscricaoRepository situacaoInscricaoRepository;
+    private final CargoService cargoService;
 
     public List<InscricaoICPendentesDTO> findInscricoesICProfessor(String matricula, Integer icId){
         Usuario professor = usuarioRepository.findUsuarioByMatricula(matricula).
@@ -111,10 +112,15 @@ public class InscricaoICService {
     }
 
     public boolean verificaEntradaDuplicada(Optional<Usuario> aluno, Integer ic_id) {
-        List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
-        System.out.println(aluno);
+//        List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
+        List<InscricaoIC> inscricoesAtivas = inscricaoICRepository.findAllBySituacaoInscricaoAndAlunoId(
+                situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.ATIVO).get(),
+                aluno.get().getId()
+        );
 
-        for(InscricaoIC inscricao : inscricoes) {
+
+
+        for(InscricaoIC inscricao : inscricoesAtivas) {
             Integer id = inscricao.getIniciacaoCientifica().getId();
             if (Objects.equals(id, ic_id)) return true;
         }
@@ -123,12 +129,9 @@ public class InscricaoICService {
 
     public void criarInscricaoIC(Integer ic_id, Integer aluno_id) {
 
-        final String CARGO_ALUNO = "Aluno";
-        final String CODIGO_PADRAO = "000";
-
         List<String> cargosAlunoId = verificaCargoUsuario(aluno_id);
 
-        if(!cargosAlunoId.contains(CARGO_ALUNO)) {
+        if(!cargosAlunoId.contains(cargoService.getCargoByNome(Cargo.ALUNO).getNome())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não corresponde ao acesso.");
         }
 
@@ -143,22 +146,30 @@ public class InscricaoICService {
         if (isRemunerado && verificaRemuneracaoAluno(aluno)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário já possui uma IC remunerada.");
         }
-        System.out.println("Antes do if");
+
         if(verificaEntradaDuplicada(aluno, ic_id)) {
-            System.out.println("Entrei no if");
+
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inscrito nessa IC");
         }
-        System.out.println("Depois do if");
-        Optional<SituacaoInscricao> situacao = situacaoInscricaoRepository.findByCodigo(CODIGO_PADRAO);
-        System.out.println("Antes de setar");
-        InscricaoIC inscricaoIC = new InscricaoIC();
 
-        inscricaoIC.setIniciacaoCientifica(IC);
-        inscricaoIC.setAluno(aluno.get());
-        inscricaoIC.setSituacaoInscricao(situacao.get());
 
-        inscricaoICRepository.save(inscricaoIC);
-        System.out.println("Depois de setar");
+        Optional<InscricaoIC> inscricaoTemporaria = verificaICInscricao(aluno.get(), IC);
+
+        if (inscricaoTemporaria.isEmpty()) {
+            System.out.println("Usuário sem inscrição cancelada");
+            Optional<SituacaoInscricao> situacao = situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.PENDENTE);
+            InscricaoIC inscricaoIC = new InscricaoIC();
+
+            inscricaoIC.setIniciacaoCientifica(IC);
+            inscricaoIC.setAluno(aluno.get());
+            inscricaoIC.setSituacaoInscricao(situacao.get());
+
+            inscricaoICRepository.save(inscricaoIC);
+        }else{
+            System.out.println("Usuário com inscrição cancelada");
+            inscricaoTemporaria.get().setSituacaoInscricao(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.PENDENTE).get());
+            inscricaoICRepository.save(inscricaoTemporaria.get());
+        }
     }
 
     public List<GetICDTO> verInscricoesIC(Integer aluno_id){
@@ -247,6 +258,16 @@ public class InscricaoICService {
 
     }
 
+    public Optional<InscricaoIC> verificaICInscricao(Usuario aluno, IniciacaoCientifica ic) {
+       InscricaoIC inscricao = inscricaoICRepository.findByAlunoIdAndIniciacaoCientifica(aluno.getId(), ic);
+       if (inscricao.getSituacaoInscricao().equals(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.CANCELADO).get()) ||
+               inscricao.getSituacaoInscricao().equals(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.RECUSADO).get()) ||
+        inscricao.getSituacaoInscricao().equals(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.EXPULSO).get())
+       ) {
+           return Optional.of(inscricao);
+       }
+       return Optional.empty();
+    }
 
 
 }
