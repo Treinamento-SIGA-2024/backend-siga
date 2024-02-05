@@ -3,9 +3,13 @@ package br.ufrj.backendsiga.controller;
 import br.ufrj.backendsiga.model.dto.InscricaoEstagioPendentesDTO;
 import br.ufrj.backendsiga.model.dto.FormularioEstagioBodyDTO;
 import br.ufrj.backendsiga.model.dto.getEstagioDTO;
+import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.InscricaoEstagio;
+import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.InscricaoEstagioMapper;
 import br.ufrj.backendsiga.service.InscricaoEstagioService;
+import br.ufrj.backendsiga.service.SessaoService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,18 +19,21 @@ import java.util.List;
 @RequestMapping("/inscricoes")
 public class InscricaoEstagioController {
     private final InscricaoEstagioService inscricaoEstagioService;
+    private final SessaoService sessaoService;
 
-    public InscricaoEstagioController(InscricaoEstagioService inscricaoEstagioService) {
+    public InscricaoEstagioController(InscricaoEstagioService inscricaoEstagioService, SessaoService sessaoService) {
         this.inscricaoEstagioService = inscricaoEstagioService;
+        this.sessaoService = sessaoService;
     }
 
     @GetMapping(path = "/estagio")
     public List<InscricaoEstagioPendentesDTO> listPendentes() {
         return inscricaoEstagioService.listPendentes();
     }
-    @GetMapping("/estagio/aluno/{aluno_id}")
-    public List<getEstagioDTO> listAllByAluno(@PathVariable Integer aluno_id) {
-        List<InscricaoEstagio> listaPedidos = inscricaoEstagioService.findEstagioByAluno(aluno_id);
+    @GetMapping("/estagio/aluno/")
+    public List<getEstagioDTO> listAllByAluno(@RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId) {
+        Usuario aluno = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.ALUNO);
+        List<InscricaoEstagio> listaPedidos = inscricaoEstagioService.findEstagioByAluno(aluno.getId());
         return listaPedidos.stream().map(InscricaoEstagioMapper.INSTANCE::toEstagioDTO).toList();
     }
     @GetMapping(path = "/estagio/{id}")
