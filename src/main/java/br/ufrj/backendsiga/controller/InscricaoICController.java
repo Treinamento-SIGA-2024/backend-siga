@@ -4,12 +4,16 @@ import br.ufrj.backendsiga.model.dto.AlterarSituacaoAlunoIcBodyDTO;
 import br.ufrj.backendsiga.model.dto.GetICDTO;
 import br.ufrj.backendsiga.model.dto.InscricaoICPendentesDTO;
 import br.ufrj.backendsiga.model.dto.VisualizarICsProfessorDTO;
+import br.ufrj.backendsiga.model.entity.Cargo;
 import br.ufrj.backendsiga.model.entity.IniciacaoCientifica;
 import br.ufrj.backendsiga.model.entity.InscricaoIC;
+import br.ufrj.backendsiga.model.entity.Usuario;
 import br.ufrj.backendsiga.model.mapping.IniciacaoCientificaMapper;
 import br.ufrj.backendsiga.service.InscricaoICService;
 
+import br.ufrj.backendsiga.service.SessaoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -20,6 +24,7 @@ import java.util.*;
 @RequestMapping("/inscricoes")
 public class InscricaoICController {
     private final InscricaoICService inscricaoICService;
+    private final SessaoService sessaoService;
 
     @PostMapping("/IC/{ic_id}/aluno/{aluno_id}")
     public void createInscricaoIC(@PathVariable Integer ic_id,
@@ -47,10 +52,11 @@ public class InscricaoICController {
     public List<InscricaoICPendentesDTO> listaICsPendentes(@PathVariable String matricula, @PathVariable Integer icId ){
         return inscricaoICService.findInscricoesICProfessor(matricula, icId);
     }
-    @GetMapping("/ic/{matricula}")
-    public List<VisualizarICsProfessorDTO> listaICsProfessor(@PathVariable String matricula ){
-        List<IniciacaoCientifica> iniciacaoCientificasProfessor
-                = inscricaoICService.findAllInscricoesICProfessor(matricula);
+    @GetMapping("/ic")
+    public List<VisualizarICsProfessorDTO> listaICsProfessor(@RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId){
+        Usuario prof = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.PROFESSOR);
+
+        List<IniciacaoCientifica> iniciacaoCientificasProfessor = inscricaoICService.findAllInscricoesICProfessor(prof.getMatricula());
         return iniciacaoCientificasProfessor.stream()
                 .map(IniciacaoCientificaMapper
                         .INSTANCE::toVisualizarICsProfessorDTO).toList();
@@ -68,9 +74,12 @@ public class InscricaoICController {
     }
 
 
-    @PutMapping("/ic/{inscricaoId}/{matriculaProf}")
-    public InscricaoIC excluirAlunoIc(@PathVariable Integer inscricaoId, @PathVariable String matriculaProf){
-        return inscricaoICService.excluirAluno(inscricaoId, matriculaProf);
+    @PutMapping("/ic/expulsar/id/{inscricaoId}")
+    public void excluirAlunoIc(@RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId,
+                                      @PathVariable Integer inscricaoId){
+
+        Usuario prof = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.PROFESSOR);
+        inscricaoICService.excluirAluno(inscricaoId, prof.getMatricula());
     }
 
 
