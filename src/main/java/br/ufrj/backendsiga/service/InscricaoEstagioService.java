@@ -51,6 +51,9 @@ public class InscricaoEstagioService {
         }
         SituacaoInscricao aprovado = situacaoInscricaoService.findByCodigo("001");
         inscricaoEstagio.setSituacaoInscricao(aprovado);
+        Estagio estagio = inscricaoEstagio.getEstagio();
+        estagio.setQuantidadeVagas(estagio.getQuantidadeVagas()-1);
+        estagioRepository.save(estagio);
         return inscricaoEstagioRepository.save(inscricaoEstagio);
     }
     public InscricaoEstagio rejectPedido(Integer id) {
