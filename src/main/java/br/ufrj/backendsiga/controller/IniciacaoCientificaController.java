@@ -69,13 +69,26 @@ public class IniciacaoCientificaController {
     }
 
     @GetMapping("/aceitas")
-    public List<IniciacaoCientificaNestedDTO> findAllIniciacaoCientificaAceita() {
-        List<IniciacaoCientifica> lista = iniciacaoCientificaService.findAllBySituacaoCriacaoAceita();
+    public List<IniciacaoCientificaNestedDTO> findAllIniciacaoCientificaAceitasAndAlunoNãoInscrito(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId
+    ) {
+        //Listar ics em que o aluno não esta inscrito ou com situação expulsa ou cancelado
+        Usuario aluno = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.ALUNO);
+        List<IniciacaoCientifica> lista = iniciacaoCientificaService.findAllBySituacaoCriacaoAceitaAndAlunoNaoInscrito(aluno);
         List<IniciacaoCientificaNestedDTO> retorno = lista.stream().map((ic) ->
             IniciacaoCientificaMapper.INSTANCE.toNestedDTO(ic)
         ).toList();
 
         return retorno;
+    }
+
+    @GetMapping("/aluno")
+    public List<IniciacaoCientificaNestedDTO> findAllIniciacaoCientificaAlunoInscrito(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId
+    ){
+        Usuario aluno = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.ALUNO);
+        List<IniciacaoCientifica> icsDoAluno = iniciacaoCientificaService.findAllIniciacoesCientificasAlunoInscrito(aluno);
+        return icsDoAluno.stream().map(ic->iniciacaoCientificaMapper.toNestedDTO(ic)).toList();
     }
 
     //Precisará ser mudado no front-end, antigamente era um post com query parameter da matrícula do professor criador.
