@@ -33,9 +33,11 @@ public class InscricaoICController {
         inscricaoICService.criarInscricaoIC(ic_id, aluno_id);
     }
 
-    @GetMapping("/IC/aluno/{aluno_id}")
-    public List<GetICDTO> verInscricoesIC(@PathVariable Integer aluno_id){
-        return inscricaoICService.verInscricoesIC(aluno_id);
+    @GetMapping("/IC/aluno")
+    public List<GetICDTO> verInscricoesIC(@RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId)
+    {
+        Usuario aluno = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.ALUNO);
+        return inscricaoICService.verInscricoesIC(aluno.getId());
     }
 
     //Vamos pegar as solicitações de ICs desse path
