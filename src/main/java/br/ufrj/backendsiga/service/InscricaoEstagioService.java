@@ -114,4 +114,21 @@ public class InscricaoEstagioService {
 
         return inscricoes;
     }
+
+    public String cancelarInscricaoEstagio(Integer inscricaoId) {
+        InscricaoEstagio inscricaoEstagio = inscricaoEstagioRepository.findById(inscricaoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inscrição não encontrada."));
+
+        SituacaoInscricao cancelado = situacaoInscricaoService.findByCodigo("004");
+
+        if(!(inscricaoEstagio.getSituacaoInscricao().getCodigo().equals(SituacaoInscricao.PENDENTE))) {
+            throw new ResponseStatusException
+                    (HttpStatus.CONFLICT, "Inscrição de Estágio não pode ser cancelada");
+        }
+
+        inscricaoEstagio.setSituacaoInscricao(cancelado);
+        inscricaoEstagioRepository.save(inscricaoEstagio);
+
+        return "Pedido de inscrição em estágio cancelada.";
+    }
 }
