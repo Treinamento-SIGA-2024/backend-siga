@@ -53,9 +53,10 @@ public class IniciacaoCientificaController {
         return IniciacaoCientificaMapper.INSTANCE.toNestedDTO(icInscricoesAtivas);
     }
 
-    @GetMapping("/ativas/professor/{matricula}")
-    public List<IniciacaoCientificaProfessorAtivaDTO> getIniciacaoCientificaAtivasByProfessor(@PathVariable String matricula){
-        List<IniciacaoCientifica> icsAtivas = iniciacaoCientificaService.findAllIniciacaoCientificaAceitasByProfessor(matricula);
+    @GetMapping("/ativas/professor")
+    public List<IniciacaoCientificaProfessorAtivaDTO> getIniciacaoCientificaAtivasByProfessor(@RequestHeader(HttpHeaders.AUTHORIZATION) String sessaoId){
+        Usuario prof = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.PROFESSOR);
+        List<IniciacaoCientifica> icsAtivas = iniciacaoCientificaService.findAllIniciacaoCientificaAceitasByProfessor(prof.getMatricula());
         return icsAtivas.stream().map(ic->IniciacaoCientificaMapper.INSTANCE.toAtivaDTO(ic)).toList();
     }
 
