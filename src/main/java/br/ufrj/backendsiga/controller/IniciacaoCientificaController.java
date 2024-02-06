@@ -109,14 +109,16 @@ public class IniciacaoCientificaController {
             )
         );
     }
-    @PutMapping("/{matriculaCoordenador}/aprovar/{icId}")
-    public void approvePedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
-        iniciacaoCientificaService.approvePedido(icId, matriculaCoordenador);
+    @PutMapping("/aprovar/{icId}")
+    public void approvePedido(@PathVariable Integer icId, @RequestHeader (HttpHeaders.AUTHORIZATION) String sessaoId) {
+        Usuario coordenador = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.COORDENADOR);
+        iniciacaoCientificaService.approvePedido(icId, coordenador);
     }
 
-    @PutMapping("/{matriculaCoordenador}/rejeitar/{icId}")
-    public void rejectPedido(@PathVariable Integer icId, @PathVariable String matriculaCoordenador) {
-         iniciacaoCientificaService.rejectPedido(icId, matriculaCoordenador);
+    @PutMapping("/rejeitar/{icId}")
+    public void rejectPedido(@PathVariable Integer icId, @RequestHeader (HttpHeaders.AUTHORIZATION) String sessaoId) {
+        Usuario coordenador = sessaoService.validateAndAssertCargoByNome(sessaoId, Cargo.COORDENADOR);
+        iniciacaoCientificaService.rejectPedido(icId, coordenador);
     }
 
     @PutMapping("/{icId}/vincular")

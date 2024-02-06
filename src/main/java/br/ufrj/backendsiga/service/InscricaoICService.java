@@ -112,7 +112,6 @@ public class InscricaoICService {
 
     public boolean verificaEntradaDuplicada(Optional<Usuario> aluno, Integer ic_id) {
         List<InscricaoIC> inscricoes = aluno.get().getInscricoesIC();
-        System.out.println(aluno);
 
         for(InscricaoIC inscricao : inscricoes) {
             Integer id = inscricao.getIniciacaoCientifica().getId();

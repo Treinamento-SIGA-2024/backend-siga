@@ -130,20 +130,22 @@ public class IniciacaoCientificaService {
         return iniciacaoCientificaRepository.saveAndFlush(iniciacaoCientifica);
     }
 
-    public IniciacaoCientifica approvePedido(Integer icId, String matriculaCoordenador) {
+    public IniciacaoCientifica approvePedido(Integer icId, Usuario coordenador) {
         IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
-        Usuario coordenador = usuarioService.getUsuarioByMatriculaAndAssertCargoByNome(matriculaCoordenador, Cargo.COORDENADOR);
 
-        if(ic.getSituacaoCriacao().getCodigo().equals("001")) {
+        if(ic.getSituacaoCriacao().getCodigo().equals(SituacaoCriacaoIC.ACEITA)) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Inscrição de estágio já aprovada"
+                "IC já aprovada"
             );
-        } else if(ic.getSituacaoCriacao().getCodigo().equals("002")) {
+        } else if(ic.getSituacaoCriacao().getCodigo().equals(SituacaoCriacaoIC.RECUSADA)) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Inscrição de estágio já rejeitada"
+                "IC já rejeitada"
             );
+        }
+        if(ic.getProfessores().contains(coordenador)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Professor/Coordenador não pode aceitar a sua IC");
         }
 
         SituacaoCriacaoIC situacaoAprovado = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.ACEITA);
@@ -153,20 +155,22 @@ public class IniciacaoCientificaService {
         return iniciacaoCientificaRepository.save(ic);
     }
     
-    public IniciacaoCientifica rejectPedido(Integer icId, String matriculaCoordenador) {
+    public IniciacaoCientifica rejectPedido(Integer icId, Usuario coordenador) {
         IniciacaoCientifica ic = getIniciacaoCientificaById(icId);
-        Usuario coordenador = usuarioService.getUsuarioByMatriculaAndAssertCargoByNome(matriculaCoordenador, Cargo.COORDENADOR);
 
         if(ic.getSituacaoCriacao().getCodigo().equals("001")) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Inscrição de estágio já aprovada"
+                "IC já aprovada"
             );
         } else if(ic.getSituacaoCriacao().getCodigo().equals("002")) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Inscrição de estágio já rejeitada"
+                "IC já rejeitada"
             );
+        }
+        if(ic.getProfessores().contains(coordenador)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Professor/Coordenador não pode recusar a sua IC");
         }
 
         SituacaoCriacaoIC situacaoRecusada = situacaoCriacaoService.getSituacaoCriacaoICByCodigo(SituacaoCriacaoIC.RECUSADA);
