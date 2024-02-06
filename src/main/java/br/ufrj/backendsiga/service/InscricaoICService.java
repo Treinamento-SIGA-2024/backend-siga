@@ -259,14 +259,18 @@ public class InscricaoICService {
     }
 
     public Optional<InscricaoIC> verificaICInscricao(Usuario aluno, IniciacaoCientifica ic) {
-       InscricaoIC inscricao = inscricaoICRepository.findByAlunoIdAndIniciacaoCientifica(aluno.getId(), ic);
+
+        InscricaoIC inscricao = inscricaoICRepository.findByAlunoIdAndIniciacaoCientifica(aluno.getId(), ic);
+       if (inscricao == null){
+           return Optional.empty();
+       }
        if (inscricao.getSituacaoInscricao().equals(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.CANCELADO).get()) ||
                inscricao.getSituacaoInscricao().equals(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.RECUSADO).get()) ||
         inscricao.getSituacaoInscricao().equals(situacaoInscricaoRepository.findByCodigo(SituacaoInscricao.EXPULSO).get())
        ) {
            return Optional.of(inscricao);
        }
-       return Optional.empty();
+        return Optional.empty();
     }
 
 
